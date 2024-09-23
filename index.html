@@ -283,10 +283,19 @@
         </div>
     </div>
 
-    <!-- Audio Element -->
+    <!-- Audio Elements -->
     <audio id="backgroundMusic" loop>
         <source src="the-virgin-medieval-music-4238.mp3" type="audio/mp3">
         Your browser does not support the audio element.
+    </audio>
+    <audio id="walkSound">
+        <source src="footsteps-running-away-fading-2-103763.mp3" type="audio/mp3">
+    </audio>
+    <audio id="victorySound">
+        <source src="medieval-fanfare-6826.mp3" type="audio/mp3">
+    </audio>
+    <audio id="defeatSound">
+        <source src="dead-8bit-41400.mp3" type="audio/mp3">
     </audio>
 
     <script>
@@ -304,6 +313,9 @@
         const scoreGauge = document.getElementById('scoreGauge');
         const speakerIcon = document.getElementById('speakerIcon');
         const backgroundMusic = document.getElementById('backgroundMusic');
+        const walkSound = document.getElementById('walkSound');
+        const victorySound = document.getElementById('victorySound');
+        const defeatSound = document.getElementById('defeatSound');
 
         const initialScore = 10; // Configurable initial score
         const targetScore = 50; // Configurable target score
@@ -426,6 +438,7 @@
             if (score >= targetScore) {
                 setTimeout(() => {
                     soldier.style.display = 'none';
+                    victorySound.play();
                     celebration.querySelector('h2').textContent = 'Congratulations!';
                     celebration.querySelector('p').textContent = `You've reached the target score!`;
                     celebration.style.display = 'flex';
@@ -459,6 +472,7 @@
             // Move the soldier to the new position
             setTimeout(() => {
                 soldier.style.left = `${newLeft}px`;
+                walkSound.play();
             }, 1000);
         }
 
@@ -518,6 +532,8 @@
 
                 // Hide the knight to simulate defeat
                 soldier.style.display = 'none';
+
+                defeatSound.play();
 
                 // Show Game Over after a delay
                 setTimeout(() => {
