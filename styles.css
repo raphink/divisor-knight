@@ -36,7 +36,7 @@ h1 {
 .timer {
     font-size: 1.5rem;
     position: relative;
-    margin: 0;
+    margin: 0 0 0 20px;
     padding: 5px 10px;
     display: flex;
     align-items: center;
