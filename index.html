@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Divisor Knight</title>
+    <!-- Fonts and styles -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jacquarda+Bastarda+9&display=swap" rel="stylesheet">
@@ -27,7 +28,7 @@
             font-weight: 400;
             font-style: normal;
             font-size: 4rem;
-        }
+        }
         .game-container {
             display: flex;
             flex-direction: column;
@@ -48,17 +49,23 @@
             width: 100%;
             position: relative;
         }
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            color: #333;
+        .level-selector {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 5px;
+            font-size: 1rem;
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 5px;
+            z-index: 100;
         }
         .timer {
             font-size: 1.5rem;
             position: absolute;
-            top: 0;
-            right: 0;
-            margin: 10px;
+            top: 10px;
+            right: 10px;
+            margin: 0;
             padding: 5px 10px;
             background-color: #fff;
             border: 2px solid #333;
@@ -201,7 +208,7 @@
             position: absolute;
             bottom: -50px;
             right: -40px;
-            width: 500px%;
+            width: 500px;
             height: auto;
             max-width: 30%;
         }
@@ -244,6 +251,10 @@
                 width: 80px;
                 max-width: 20%;
             }
+            .level-selector {
+                font-size: 0.9rem;
+                padding: 3px;
+            }
         }
         /* Landscape Orientation */
         @media only screen and (orientation: landscape) {
@@ -263,9 +274,16 @@
 </head>
 <body>
     <div class="game-container">
+        <!-- Level Selector -->
+        <select class="level-selector" id="levelSelector">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+
         <div class="game-content">
             <h1>Divisor Knight</h1>
-            <div class="timer" id="timer">2:00
+            <div class="timer" id="timer">1:00
                 <span class="speaker-icon" id="speakerIcon">🔊</span>
             </div>
             <div class="number-display" id="numberDisplay"></div>
@@ -278,8 +296,8 @@
             <!-- Knight and Enemy -->
             <img src="https://cdnb.artstation.com/p/assets/images/images/046/439/899/original/jens-steenmetz-swordsman-idle.gif?1645115580" alt="Knight" class="soldier" id="soldier">
             <img src="https://i.pinimg.com/originals/20/a4/fa/20a4fa9b235aa28f73caa31805289b83.gif" alt="Enemy" class="enemy-soldier" id="enemySoldier">
-            <!-- Monster for Game Over -->
-            <img src="dead-knight.png" alt="Monster" class="deadKnight" id="deadKnight">
+            <!-- Dead Knight for Game Over -->
+            <img src="dead-knight.png" alt="Dead Knight" class="deadKnight" id="deadKnight">
             <!-- Castle at the end -->
             <img src="castle.png" alt="Castle" class="castle" id="castle">
         </div>
@@ -333,17 +351,35 @@
         const defeatSound = document.getElementById('defeatSound');
         const magicAttackSound = document.getElementById('magicAttackSound');
         const noTimeSound = document.getElementById('noTimeSound');
-
+        const levelSelector = document.getElementById('levelSelector');
+    
         const initialScore = 10; // Configurable initial score
         const targetScore = 50; // Configurable target score
-
+    
         let currentNumber;
         let currentOptions;
         let score = initialScore; // Start the score at initialScore points
         let timeLeft = 60; // 1 minute in seconds
         let maxNumber = 30; // Starting maximum number for difficulty
-        const maxMaxNumber = 140;
-
+        let maxMaxNumber = 150; // Default maxMaxNumber for medium level
+    
+        // Function to update maxMaxNumber based on selected level
+        function updateLevel() {
+            const selectedLevel = levelSelector.value;
+            if (selectedLevel === 'easy') {
+                maxMaxNumber = 100;
+            } else if (selectedLevel === 'medium') {
+                maxMaxNumber = 150;
+            } else if (selectedLevel === 'hard') {
+                maxMaxNumber = 200;
+            }
+            // Reset game when level changes
+            resetGame();
+        }
+    
+        // Event listener for level selector
+        levelSelector.addEventListener('change', updateLevel);
+    
         // Play music automatically when the game starts
         backgroundMusic.play().catch(error => {
             // Handle autoplay restrictions
@@ -351,9 +387,9 @@
             backgroundMusic.pause();
             speakerIcon.textContent = '🔇';
         });
-
+    
         let isMusicPlaying = true;
-
+    
         speakerIcon.addEventListener('click', () => {
             if (isMusicPlaying) {
                 backgroundMusic.pause();
@@ -364,7 +400,7 @@
             }
             isMusicPlaying = !isMusicPlaying;
         });
-
+    
         function isPrime(num) {
             if (num <= 1) return false;
             if (num <= 3) return true;
@@ -375,7 +411,7 @@
             }
             return true;
         }
-
+    
         function generateNumber() {
             let num;
             do {
@@ -383,7 +419,7 @@
             } while (isPrime(num));
             return num;
         }
-
+    
         function generateOptions(number) {
             const options = [];
             for (let i = 2; i <= Math.floor(number / 2); i++) {
@@ -391,7 +427,7 @@
                     options.push(i);
                 }
             }
-
+    
             // Add wrong answers
             while (options.length < 12) {
                 const randomNum = Math.floor(Math.random() * (maxNumber - 2)) + 2;
@@ -399,10 +435,10 @@
                     options.push(randomNum);
                 }
             }
-
+    
             return options.sort((a, b) => a - b);
         }
-
+    
         function renderOptions(options) {
             optionsContainer.innerHTML = '';
             options.forEach(option => {
@@ -415,14 +451,14 @@
                 optionsContainer.appendChild(button);
             });
         }
-
+    
         function checkAnswer() {
             const selectedOptions = Array.from(document.querySelectorAll('.option.selected'));
             const correctDivisors = currentOptions.filter(num => currentNumber % num === 0);
-
+    
             let points = 0;
             let correctAnswers = 0;
-
+    
             selectedOptions.forEach(option => {
                 const value = parseInt(option.textContent);
                 if (correctDivisors.includes(value)) {
@@ -435,7 +471,7 @@
                 }
                 option.classList.remove('selected');
             });
-
+    
             correctDivisors.forEach(divisor => {
                 const option = Array.from(document.querySelectorAll('.option')).find(el => parseInt(el.textContent) === divisor);
                 if (option && !option.classList.contains('correct')) {
@@ -443,15 +479,15 @@
                     points--; // Missing answers remove 1 point
                 }
             });
-
+    
             let previousScore = score;
             score += points;
             score = Math.max(0, score); // Ensure score doesn't go below 0
             updateScore(previousScore, score);
-
+    
             submitButton.style.display = 'none';
             nextRoundButton.style.display = 'inline-block';
-
+    
             if (score >= targetScore) {
                 setTimeout(() => {
                     soldier.style.display = 'none';
@@ -464,44 +500,43 @@
             } else if (score <= 0) {
                 endGame('score');
             }
-
+    
             // Increase difficulty by increasing maxNumber
             if (maxNumber < maxMaxNumber) {
-            maxNumber += 20;
+                maxNumber += 20;
             }
         }
-
+    
         function updateScore(previousScore, newScore) {
             scoreDisplay.textContent = newScore;
             const gaugeWidth = scoreGauge.clientWidth - soldier.clientWidth - 120; // Adjusted for padding and castle width
             const positionPercentage = Math.max(0, newScore / targetScore);
             const newLeft = gaugeWidth * positionPercentage;
-
+    
             // If score decreased, show enemy soldier attacking
             if (newScore < previousScore) {
                 enemySoldier.style.left = `${newLeft + soldier.clientWidth}px`;
                 enemySoldier.style.display = 'block';
                 magicAttackSound.play();
-
+    
                 // Hide the enemy soldier after some time
                 setTimeout(() => {
                     enemySoldier.style.display = 'none';
                 }, 1000);
             }
-
+    
             if (newScore > previousScore) {
                 // Add 10 extra seconds for each correct answer
                 timeLeft += 10;
-
                 walkSound.play();
             }
-
+    
             // Move the soldier to the new position
             setTimeout(() => {
                 soldier.style.left = `${newLeft}px`;
             }, 1000);
         }
-
+    
         function startNewRound() {
             currentNumber = generateNumber();
             currentOptions = generateOptions(currentNumber);
@@ -510,7 +545,7 @@
             submitButton.style.display = 'inline-block';
             nextRoundButton.style.display = 'none';
         }
-
+    
         function throwParty() {
             for (let i = 0; i < 50; i++) {
                 const confetti = document.createElement('div');
@@ -519,26 +554,28 @@
                 confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
                 confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
                 document.body.appendChild(confetti);
-
+    
                 setTimeout(() => {
                     confetti.remove();
                 }, 5000);
             }
         }
-
+    
         function updateTimer() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
             timerDisplay.firstChild.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-
-            // Change timer color to red when less than 1 minute
+    
+            // Change timer color to red when less than 10 seconds
             if (timeLeft <= 10) {
-                noTimeSound.play();
+                if (!noTimeSound.playing) {
+                    noTimeSound.play();
+                }
                 timerDisplay.style.color = 'red';
             } else {
                 timerDisplay.style.color = 'black';
             }
-
+    
             if (timeLeft > 0) {
                 timeLeft--;
                 setTimeout(updateTimer, 1000);
@@ -546,16 +583,16 @@
                 endGame('time');
             }
         }
-
+    
         function endGame(reason) {
             if (reason === 'time') {
                 // You died
                 deadKnight.style.display = 'block';
                 deadKnight.style.left = soldier.style.left;
-
+    
                 // Hide the knight to simulate defeat
                 soldier.style.display = 'none';
-                
+    
                 celebration.style.display = 'flex';
                 celebration.querySelector('h2').textContent = "Time's Up!";
                 celebration.querySelector('p').textContent = `Your final score is ${score} points.`;
@@ -563,12 +600,12 @@
                 // You died
                 deadKnight.style.display = 'block';
                 deadKnight.style.left = '0px';
-
+    
                 // Hide the knight to simulate defeat
                 soldier.style.display = 'none';
-
+    
                 defeatSound.play();
-
+    
                 // Show Game Over after a delay
                 setTimeout(() => {
                     celebration.style.display = 'flex';
@@ -577,13 +614,17 @@
                 }, 2000);
             }
         }
-
+    
         submitButton.addEventListener('click', checkAnswer);
         nextRoundButton.addEventListener('click', startNewRound);
         playAgainButton.addEventListener('click', () => {
+            resetGame();
+        });
+    
+        function resetGame() {
             score = initialScore; // Reset score to initialScore
-            timeLeft = 120; // Reset time
-            maxNumber = 20; // Reset maxNumber for difficulty
+            timeLeft = 60; // Reset time
+            maxNumber = 30; // Reset maxNumber for difficulty
             scoreDisplay.textContent = score;
             soldier.style.left = '0px';
             timerDisplay.style.color = 'black';
@@ -592,12 +633,11 @@
             soldier.style.display = 'block'; // Show knight again
             placeSoldierAtStart();
             startNewRound();
-            updateTimer();
-        });
-
+        }
+    
         // Set initial score display
         scoreDisplay.textContent = score;
-
+    
         // Place soldier according to initial score
         function placeSoldierAtStart() {
             const gaugeWidth = scoreGauge.clientWidth - soldier.clientWidth - 120; // Adjusted for padding and castle width
@@ -605,11 +645,10 @@
             const initialLeft = gaugeWidth * positionPercentage;
             soldier.style.left = `${initialLeft}px`;
         }
-
+    
         placeSoldierAtStart();
         startNewRound();
         updateTimer();
     </script>
 </body>
 </html>
-
