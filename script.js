@@ -229,7 +229,7 @@ $(document).ready(function() {
         if (correctDivisors.length === 0 && $selectedOptions.length === 0) {
             // The player correctly identified that there are no common divisors
             points++;
-            $messageDisplay.text("Correct! There are no common divisors between the two numbers.");
+            //$messageDisplay.text("Correct! There are no common divisors between the two numbers.");
         } else {
             $selectedOptions.each(function() {
                 const value = parseInt($(this).text());
