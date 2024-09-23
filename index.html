@@ -476,10 +476,13 @@
                 }, 1000);
             }
 
+            if (newScore > previousScore) {
+                walkSound.play();
+            }
+
             // Move the soldier to the new position
             setTimeout(() => {
                 soldier.style.left = `${newLeft}px`;
-                walkSound.play();
             }, 1000);
         }
 
