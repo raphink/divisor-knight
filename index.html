@@ -545,32 +545,32 @@
                 maxNumber += 20;
             }
         }
-
     
         function updateScore(previousScore, newScore) {
             scoreDisplay.textContent = newScore;
             const gaugeWidth = scoreGauge.clientWidth - soldier.clientWidth - 120; // Adjusted for padding and castle width
             const positionPercentage = Math.max(0, newScore / targetScore);
             const newLeft = gaugeWidth * positionPercentage;
-    
+
             // If score decreased, show enemy soldier attacking
             if (newScore < previousScore) {
                 enemySoldier.style.left = `${newLeft + soldier.clientWidth}px`;
                 enemySoldier.style.display = 'block';
                 magicAttackSound.play();
-    
+
                 // Hide the enemy soldier after some time
                 setTimeout(() => {
                     enemySoldier.style.display = 'none';
                 }, 1000);
             }
-    
+
             if (newScore > previousScore) {
                 // Add 10 extra seconds for each correct answer
                 timeLeft += 10;
+                refreshTimerDisplay(); // Update timer display immediately
                 walkSound.play();
             }
-    
+
             // Move the soldier to the new position
             setTimeout(() => {
                 soldier.style.left = `${newLeft}px`;
@@ -603,27 +603,33 @@
                 }, 5000);
             }
         }
-    
-        function updateTimer() {
+
+        function refreshTimerDisplay() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
             timerDisplay.firstChild.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    
+
             // Change timer color to red when less than 10 seconds
             if (timeLeft <= 10) {
-                if (!noTimeSound.playing) {
+                if (!noTimeSoundPlayed) {
                     noTimeSound.play();
+                    noTimeSoundPlayed = true;
                 }
                 timerDisplay.style.color = 'red';
             } else {
                 timerDisplay.style.color = 'black';
+                noTimeSoundPlayed = false; // Reset the flag if time increases
             }
+        }
     
+        function updateTimer() {
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
                 endGame('time');
+            } else {
+                timeLeft--;
+                refreshTimerDisplay();
             }
-            timeLeft--;
         }
     
         function startTimer() {
@@ -631,6 +637,8 @@
             clearInterval(timerInterval);
             timerInterval = setInterval(updateTimer, 1000);
         }
+
+        let noTimeSoundPlayed = false;
     
         function endGame(reason) {
             clearInterval(timerInterval); // Stop the timer
