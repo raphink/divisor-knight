@@ -552,16 +552,39 @@
             const positionPercentage = Math.max(0, newScore / targetScore);
             const newLeft = gaugeWidth * positionPercentage;
 
-            // If score decreased, show enemy soldier attacking
-            if (newScore < previousScore) {
-                enemySoldier.style.left = `${newLeft + soldier.clientWidth}px`;
-                enemySoldier.style.display = 'block';
-                magicAttackSound.play();
+            // Move the soldier to the new position
+            setTimeout(() => {
+                soldier.style.left = `${newLeft}px`;
+            }, 1000);
 
-                // Hide the enemy soldier after some time
+            // If score decreased, show enemy soldier attacking from the castle
+            if (newScore < previousScore) {
+                // Get the positions relative to the score gauge
+                const gaugeRect = scoreGauge.getBoundingClientRect();
+                const castleRect = castle.getBoundingClientRect();
+                const soldierRect = soldier.getBoundingClientRect();
+
+                // Calculate the starting position (castle) and ending position (knight) for the enemy soldier
+                const enemyStartLeft = castleRect.left - gaugeRect.left;
+                const enemyEndLeft = soldierRect.left - gaugeRect.left + soldier.clientWidth;
+
+                // Set the enemy soldier's starting position at the castle
+                enemySoldier.style.left = `${enemyStartLeft}px`;
+                enemySoldier.style.display = 'block';
+
+                // Force reflow to ensure the starting position is applied before the transition
+                enemySoldier.getBoundingClientRect();
+
+                // Animate the enemy soldier moving towards the knight
+                setTimeout(() => {
+                    enemySoldier.style.left = `${enemyEndLeft}px`;
+                    magicAttackSound.play();
+                }, 100); // Small delay to ensure enemy appears before moving
+
+                // Hide the enemy soldier after the animation
                 setTimeout(() => {
                     enemySoldier.style.display = 'none';
-                }, 1000);
+                }, 2000); // Duration should match the transition time
             }
 
             if (newScore > previousScore) {
@@ -570,11 +593,6 @@
                 refreshTimerDisplay(); // Update timer display immediately
                 walkSound.play();
             }
-
-            // Move the soldier to the new position
-            setTimeout(() => {
-                soldier.style.left = `${newLeft}px`;
-            }, 1000);
         }
     
         function startNewRound() {
