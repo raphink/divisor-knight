@@ -166,6 +166,7 @@
         }
         .monster {
             display: none;
+            width: 110px;
             left: -80px;
         }
         .castle {
@@ -194,7 +195,7 @@
             <img src="https://cdnb.artstation.com/p/assets/images/images/046/439/899/original/jens-steenmetz-swordsman-idle.gif?1645115580" alt="Knight" class="soldier" id="soldier">
             <img src="https://i.pinimg.com/originals/20/a4/fa/20a4fa9b235aa28f73caa31805289b83.gif" alt="Enemy" class="enemy-soldier" id="enemySoldier">
             <!-- Monster for Game Over -->
-            <img src="https://i.imgur.com/6hO9RJV.png" alt="Monster" class="monster" id="monster">
+            <img src="dead-knight.png" alt="Monster" class="monster" id="monster">
             <!-- Castle at the end -->
             <img src="castle.png" alt="Castle" class="castle" id="castle">
         </div>
@@ -221,7 +222,7 @@
         const monster = document.getElementById('monster');
         const scoreGauge = document.getElementById('scoreGauge');
 
-        const initialScore = 20; // Configurable initial score
+        const initialScore = 10; // Configurable initial score
         const targetScore = 50; // Configurable target score
 
         let currentNumber;
