@@ -127,7 +127,7 @@ h1 {
     bottom: 0;
     width: 80px;
     height: auto;
-    transition: left 0.5s;
+    transition: left 1s;
     max-width: 15%;
     z-index: 90;
 }

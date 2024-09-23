@@ -11,6 +11,8 @@ $(document).ready(function() {
     const $playAgainButton = $('#playAgain');
     const $timerDisplay = $('#timer');
     const $soldier = $('#soldier');
+    const $soldierIdle = 'jens-steenmetz-swordsman-idle.gif';
+    const $soldierRunning = 'jens-steenmetz-swordsman-running.gif';
     const $enemySoldier = $('#enemySoldier');
     const $deadKnight = $('#deadKnight');
     const $scoreGauge = $('#scoreGauge');
@@ -288,8 +290,10 @@ $(document).ready(function() {
         const newLeft = gaugeWidth * positionPercentage;
 
         // Move the soldier to the new position
+	$soldier.attr('src', $soldierRunning);
+        $soldier.css('left', `${newLeft}px`);
         setTimeout(() => {
-            $soldier.css('left', `${newLeft}px`);
+            $soldier.attr('src', $soldierIdle);
         }, 1000);
 
         // If score decreased, show enemy soldier attacking from the castle
