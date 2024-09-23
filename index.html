@@ -385,6 +385,7 @@
 
             if (score >= targetScore) {
                 setTimeout(() => {
+                    soldier.style.display = 'none';
                     celebration.querySelector('h2').textContent = 'Congratulations!';
                     celebration.querySelector('p').textContent = `You've reached the target score!`;
                     celebration.style.display = 'flex';
