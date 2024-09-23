@@ -516,7 +516,7 @@
             timerDisplay.firstChild.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
             // Change timer color to red when less than 1 minute
-            if (timeLeft <= 60) {
+            if (timeLeft <= 10) {
                 timerDisplay.style.color = 'red';
             } else {
                 timerDisplay.style.color = 'black';
