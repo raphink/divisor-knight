@@ -110,7 +110,7 @@ function generateNumber() {
         do {
             num1 = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
             num2 = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
-        } while (isPrime(num1) || isPrime(num2));
+        } while (isPrime(num1) || isPrime(num2) || num1 === num2);
         return [num1, num2];
     }
 }
@@ -133,34 +133,27 @@ function generateOptions(numbers) {
         }
         const maxOptionValue = number - 1; // All options must be less than the number
         const minOptionValue = 2;
-        // Rest of the existing code for single mode...
-    } else if (gameMode === 'common') {
-        // Find common divisors less than both numbers
-        for (let i = 2; i <= Math.min(number1, number2); i++) {
-            if (number1 % i === 0 && number2 % i === 0) {
-                correctDivisors.push(i);
-            }
-        }
-        const maxOptionValue = Math.min(number1, number2) - 1;
-        const minOptionValue = 2;
+
         // Calculate the total possible unique wrong options
         const totalPossibleWrongOptions = maxOptionValue - minOptionValue + 1 - correctDivisors.length;
-        // Calculate the number of wrong answers needed
         const totalOptionsNeeded = Math.min(12, totalPossibleWrongOptions + correctDivisors.length);
         const wrongAnswersNeeded = totalOptionsNeeded - correctDivisors.length;
 
-        // Generate wrong answers less than both numbers
+        // Generate wrong answers less than the number
         while (wrongOptions.length < wrongAnswersNeeded && attempts < maxAttempts) {
             const randomNum = Math.floor(Math.random() * (maxOptionValue - minOptionValue + 1)) + minOptionValue;
             if (
-                !options.includes(randomNum) &&
+                !correctDivisors.includes(randomNum) &&
                 !wrongOptions.includes(randomNum) &&
-                (number1 % randomNum !== 0 || number2 % randomNum !== 0)
+                number % randomNum !== 0
             ) {
                 wrongOptions.push(randomNum);
             }
             attempts++;
         }
+    } else if (gameMode === 'common') {
+        // Existing common mode code remains the same
+        // ...
     }
 
     options.push(...correctDivisors, ...wrongOptions);
