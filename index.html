@@ -332,7 +332,8 @@
         let currentOptions;
         let score = initialScore; // Start the score at initialScore points
         let timeLeft = 60; // 1 minute in seconds
-        let maxNumber = 20; // Starting maximum number for difficulty
+        let maxNumber = 30; // Starting maximum number for difficulty
+        const maxMaxNumber = 140;
 
         // Play music automatically when the game starts
         backgroundMusic.play().catch(error => {
@@ -443,9 +444,6 @@
             nextRoundButton.style.display = 'inline-block';
 
             if (score >= targetScore) {
-                // Add 10 extra seconds for each correct answer
-                timeLeft += 10;
-
                 setTimeout(() => {
                     soldier.style.display = 'none';
                     victorySound.play();
@@ -459,7 +457,9 @@
             }
 
             // Increase difficulty by increasing maxNumber
+            if (maxNumber < maxMaxNumber) {
             maxNumber += 20;
+            }
         }
 
         function updateScore(previousScore, newScore) {
@@ -481,6 +481,9 @@
             }
 
             if (newScore > previousScore) {
+                // Add 10 extra seconds for each correct answer
+                timeLeft += 10;
+
                 walkSound.play();
             }
 
