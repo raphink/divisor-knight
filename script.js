@@ -337,7 +337,10 @@ $(document).ready(function() {
 
             // Hide the enemy soldier after the animation
             setTimeout(() => {
-                $enemySoldier.hide();
+                $enemySoldier.css('left', `${enemyStartLeft}px`).show();
+                setTimeout(() => {
+                    $enemySoldier.hide();
+                }, 1000); // Duration should match the transition time
             }, 2000); // Duration should match the transition time
         }
 
