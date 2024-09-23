@@ -6,7 +6,7 @@ $(document).ready(function() {
         $optionsContainer = $('#optionsContainer'),
         $scoreDisplay = $('#score'),
         $submitButton = $('#submit'),
-        $nextRoundButton = $('#nextRound'),
+        $nextRoundButton = $('#nextRound'), // This will be removed from UI
         $celebration = $('#celebration'),
         $playAgainButton = $('#playAgain'),
         $timerDisplay = $('#timer'),
@@ -27,7 +27,9 @@ $(document).ready(function() {
         $castle = $('#castle'),
         $modeSelector = $('#modeSelector'),
         $instructions = $('#instructions'),
-        $messageDisplay = $('#messageDisplay');
+        $feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'), {}),
+        $feedbackMessage = $('#feedbackMessage'),
+        $feedbackNextRound = $('#feedbackNextRound');
 
     let gameMode = 'single'; // Default game mode
     let currentNumbers; // For storing the numbers in the current round
@@ -104,6 +106,7 @@ $(document).ready(function() {
     function generateNumber() {
         if (gameMode === 'single') {
             let num;
+            // Allow prime numbers by removing the isPrime check
             num = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
             return [num]; // Return an array for consistency
         } else if (gameMode === 'common') {
@@ -208,9 +211,6 @@ $(document).ready(function() {
         // Pause the timer while showing results
         clearInterval(timerInterval);
 
-        // Clear previous messages
-        $messageDisplay.text('');
-
         const $selectedOptions = $('.option.selected');
         let correctDivisors = [];
         const [number1, number2] = currentNumbers;
@@ -229,8 +229,8 @@ $(document).ready(function() {
         if (!hasDivisors && $selectedOptions.length === 0) {
             // Correctly identified that there are no divisors
             points += 1;
-            // Optionally, display a success message
-            $messageDisplay.text("Correct! You found all the divisors.");
+            // Set feedback message
+            $feedbackMessage.text("Correct! You found all the divisors.");
         } else if (!hasDivisors && $selectedOptions.length > 0) {
             // Incorrectly selected options when there are no divisors
             $selectedOptions.each(function() {
@@ -238,7 +238,7 @@ $(document).ready(function() {
                 points -= 2; // Wrong answers remove 2 points
                 $(this).removeClass('selected');
             });
-            $messageDisplay.text("Incorrect! There are no divisors to select.");
+            $feedbackMessage.text("❌ Incorrect! There are no divisors to select.");
         } else {
             // When there are divisors
             $selectedOptions.each(function() {
@@ -265,19 +265,19 @@ $(document).ready(function() {
             });
 
             if (correctAnswers === correctDivisors.length && $selectedOptions.length === correctDivisors.length) {
-                $messageDisplay.text("Great job! You've found all the divisors.");
+                $feedbackMessage.text("✅ Great job! You've found all the divisors.");
             } else {
-                $messageDisplay.text("Some answers were incorrect or missing.");
+                $feedbackMessage.text("⚠️ Some answers were incorrect or missing.");
             }
         }
 
-        // Ensure score doesn't go below 0
+        // Update the score
         score += points;
-        score = Math.max(0, score);
+        score = Math.max(0, score); // Ensure score doesn't go below 0
         updateScore(score);
 
-        $submitButton.hide();
-        $nextRoundButton.show();
+        // Show the feedback modal with the message
+        $feedbackModal.show();
 
         if (score >= targetScore) {
             setTimeout(() => {
@@ -354,8 +354,6 @@ $(document).ready(function() {
         currentNumbers = generateNumber();
         currentOptions = generateOptions(currentNumbers);
 
-        $messageDisplay.text(''); // Clear any previous messages
-
         if (gameMode === 'single') {
             $instructions.text('Select all divisors of the number. If there are none, submit without selecting any options.');
             $instructions.show();
@@ -379,7 +377,6 @@ $(document).ready(function() {
         }
 
         $submitButton.show();
-        $nextRoundButton.hide();
 
         // Resume the timer
         startTimer();
@@ -469,8 +466,16 @@ $(document).ready(function() {
         }
     }
 
+    // Handle Submit Button Click
     $submitButton.on('click', checkAnswer);
-    $nextRoundButton.on('click', startNewRound);
+
+    // Handle Next Round Button in Feedback Modal
+    $feedbackNextRound.on('click', function() {
+        $feedbackModal.hide();
+        startNewRound();
+    });
+
+    // Handle Play Again Button in Celebration Modal
     $playAgainButton.on('click', function() {
         $celebration.modal('hide');
         resetGame();

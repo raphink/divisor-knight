@@ -262,3 +262,21 @@ h1 {
     display: none;
 }
 
+/* Feedback Modal Styles */
+.feedback-content {
+    /* Add any custom styles if needed */
+}
+
+.feedback-content .modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.feedback-content .modal-body {
+    font-size: 1.2rem;
+}
+
+.feedback-content .modal-footer button {
+    font-size: 1rem;
+}
+

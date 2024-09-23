@@ -66,16 +66,12 @@
                     <!-- Instructions are dynamically updated via JavaScript based on game mode and number type -->
                 </p>
 
-                <!-- Message Display -->
-                <div class="message" id="messageDisplay"></div>
-
                 <!-- Options Container -->
                 <div class="options-container mb-3" id="optionsContainer"></div>
 
                 <!-- Buttons -->
                 <div class="button-group">
                     <button class="btn btn-success" id="submit">Submit</button>
-                    <button class="btn btn-primary" id="nextRound" style="display: none;">Next Round</button>
                 </div>
 
             </div>
@@ -102,6 +98,24 @@
                     <div class="modal-body">
                         <p></p>
                         <button class="btn btn-success" id="playAgain">🕹️ Play Again</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Modal -->
+        <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content feedback-content text-center">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="feedbackModalLabel">Result</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="feedbackMessage">
+                        <!-- Feedback message will be injected here via JavaScript -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="feedbackNextRound">Next Round</button>
                     </div>
                 </div>
             </div>
