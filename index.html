@@ -150,7 +150,7 @@
             background-color: #ccc;
             transform: translateY(-50%);
         }
-        .soldier, .enemy-soldier {
+        .soldier, .enemy-soldier, .monster {
             position: absolute;
             bottom: 0;
             width: 80px;
@@ -163,6 +163,10 @@
         .enemy-soldier {
             display: none;
             width: 160px;
+        }
+        .monster {
+            display: none;
+            left: -80px;
         }
         .castle {
             position: absolute;
@@ -177,7 +181,7 @@
     <div class="game-container">
         <div class="game-content">
             <h1>Divisor Knight</h1>
-            <div class="timer" id="timer">5:00</div>
+            <div class="timer" id="timer">3:00</div>
             <div class="number-display" id="numberDisplay"></div>
             <div class="options-container" id="optionsContainer"></div>
             <div class="score">Score: <span id="score">20</span></div>
@@ -187,8 +191,10 @@
         <div class="score-gauge" id="scoreGauge">
             <div class="gauge-track"></div>
             <!-- Knight and Enemy -->
-            <img src="https://cdnb.artstation.com/p/assets/images/images/046/439/899/original/jens-steenmetz-swordsman-idle.gif?1645115580" alt="Soldier" class="soldier" id="soldier">
-            <img src="https://i.pinimg.com/originals/20/a4/fa/20a4fa9b235aa28f73caa31805289b83.gif" alt="Enemy Soldier" class="enemy-soldier" id="enemySoldier">
+            <img src="https://cdnb.artstation.com/p/assets/images/images/046/439/899/original/jens-steenmetz-swordsman-idle.gif?1645115580" alt="Knight" class="soldier" id="soldier">
+            <img src="https://i.pinimg.com/originals/20/a4/fa/20a4fa9b235aa28f73caa31805289b83.gif" alt="Enemy" class="enemy-soldier" id="enemySoldier">
+            <!-- Monster for Game Over -->
+            <img src="https://i.imgur.com/6hO9RJV.png" alt="Monster" class="monster" id="monster">
             <!-- Castle at the end -->
             <img src="castle.png" alt="Castle" class="castle" id="castle">
         </div>
@@ -212,6 +218,7 @@
         const timerDisplay = document.getElementById('timer');
         const soldier = document.getElementById('soldier');
         const enemySoldier = document.getElementById('enemySoldier');
+        const monster = document.getElementById('monster');
         const scoreGauge = document.getElementById('scoreGauge');
 
         const initialScore = 20; // Configurable initial score
@@ -221,6 +228,7 @@
         let currentOptions;
         let score = initialScore; // Start the score at initialScore points
         let timeLeft = 180; // 3 minutes in seconds
+        let maxNumber = 20; // Starting maximum number for difficulty
 
         function isPrime(num) {
             if (num <= 1) return false;
@@ -236,7 +244,7 @@
         function generateNumber() {
             let num;
             do {
-                num = Math.floor(Math.random() * 142) + 3; // Generates numbers from 3 to 144
+                num = Math.floor(Math.random() * (maxNumber - 3 + 1)) + 3; // Generates numbers from 3 to maxNumber
             } while (isPrime(num));
             return num;
         }
@@ -251,7 +259,7 @@
 
             // Add wrong answers
             while (options.length < 12) {
-                const randomNum = Math.floor(Math.random() * (number - 2)) + 2;
+                const randomNum = Math.floor(Math.random() * (maxNumber - 2)) + 2;
                 if (!options.includes(randomNum) && number % randomNum !== 0) {
                     options.push(randomNum);
                 }
@@ -320,6 +328,9 @@
             } else if (score <= 0) {
                 endGame('score');
             }
+
+            // Increase difficulty by increasing maxNumber
+            maxNumber += 20;
         }
 
         function updateScore(previousScore, newScore) {
@@ -390,13 +401,24 @@
         }
 
         function endGame(reason) {
-            celebration.style.display = 'flex';
             if (reason === 'time') {
+                celebration.style.display = 'flex';
                 celebration.querySelector('h2').textContent = 'Time\'s Up!';
                 celebration.querySelector('p').textContent = `Your final score is ${score} points.`;
             } else if (reason === 'score') {
-                celebration.querySelector('h2').textContent = 'Game Over!';
-                celebration.querySelector('p').textContent = `Your score dropped to zero.`;
+                // Monster attacks the knight from the left
+                monster.style.display = 'block';
+                monster.style.left = '0px';
+
+                // Hide the knight to simulate defeat
+                soldier.style.display = 'none';
+
+                // Show Game Over after a delay
+                setTimeout(() => {
+                    celebration.style.display = 'flex';
+                    celebration.querySelector('h2').textContent = 'Game Over!';
+                    celebration.querySelector('p').textContent = `A monster has defeated you!`;
+                }, 2000);
             }
         }
 
@@ -404,11 +426,15 @@
         nextRoundButton.addEventListener('click', startNewRound);
         playAgainButton.addEventListener('click', () => {
             score = initialScore; // Reset score to initialScore
-            timeLeft = 300;
+            timeLeft = 180; // Reset time
+            maxNumber = 20; // Reset maxNumber for difficulty
             scoreDisplay.textContent = score;
             soldier.style.left = '0px';
             timerDisplay.style.color = 'black';
             celebration.style.display = 'none';
+            monster.style.display = 'none';
+            soldier.style.display = 'block'; // Show knight again
+            placeSoldierAtStart();
             startNewRound();
             updateTimer();
         });
@@ -430,4 +456,3 @@
     </script>
 </body>
 </html>
-
