@@ -424,25 +424,55 @@
             } while (isPrime(num));
             return num;
         }
-    
+
         function generateOptions(number) {
             const options = [];
-            for (let i = 2; i <= Math.floor(number / 2); i++) {
+            const correctDivisors = [];
+            const wrongOptions = [];
+            const maxAttempts = 100; // Maximum attempts to prevent infinite loop
+            let attempts = 0;
+
+            // Generate correct divisors less than the number
+            for (let i = 2; i < number; i++) {
                 if (number % i === 0) {
-                    options.push(i);
+                    correctDivisors.push(i);
                 }
             }
-    
-            // Add wrong answers
-            while (options.length < 12) {
-                const randomNum = Math.floor(Math.random() * (maxNumber - 2)) + 2;
-                if (!options.includes(randomNum) && number % randomNum !== 0) {
-                    options.push(randomNum);
+
+            options.push(...correctDivisors);
+
+            // Calculate the range for possible wrong answers
+            const maxOptionValue = number - 1; // All options must be less than the number
+            const minOptionValue = 2; // Smallest possible divisor
+
+            // Calculate the total possible unique wrong options
+            const totalPossibleWrongOptions = maxOptionValue - minOptionValue + 1 - correctDivisors.length;
+
+            // Calculate the number of wrong answers needed
+            const totalOptionsNeeded = Math.min(12, totalPossibleWrongOptions + correctDivisors.length);
+            const wrongAnswersNeeded = totalOptionsNeeded - correctDivisors.length;
+
+            // Generate wrong answers less than the number
+            while (wrongOptions.length < wrongAnswersNeeded && attempts < maxAttempts) {
+                const randomNum = Math.floor(Math.random() * (maxOptionValue - minOptionValue + 1)) + minOptionValue;
+                if (
+                    !options.includes(randomNum) &&
+                    !wrongOptions.includes(randomNum) &&
+                    number % randomNum !== 0
+                ) {
+                    wrongOptions.push(randomNum);
                 }
+                attempts++;
             }
-    
-            return options.sort((a, b) => a - b);
+
+            options.push(...wrongOptions);
+
+            // Shuffle options
+            options.sort(() => Math.random() - 0.5);
+
+            return options;
         }
+
     
         function renderOptions(options) {
             optionsContainer.innerHTML = '';
