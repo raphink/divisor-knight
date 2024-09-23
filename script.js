@@ -124,6 +124,7 @@ function generateOptions(numbers) {
     let attempts = 0;
 
     if (gameMode === 'single') {
+        // Existing single mode code (unchanged)
         const number = number1;
         // Generate correct divisors less than the number
         for (let i = 2; i < number; i++) {
@@ -152,8 +153,35 @@ function generateOptions(numbers) {
             attempts++;
         }
     } else if (gameMode === 'common') {
-        // Existing common mode code remains the same
-        // ...
+        // Generate common divisors of number1 and number2
+        const maxDivisor = Math.min(number1, number2);
+        for (let i = 2; i <= maxDivisor; i++) {
+            if (number1 % i === 0 && number2 % i === 0) {
+                correctDivisors.push(i);
+            }
+        }
+
+        // Calculate the range for possible wrong answers
+        const maxOptionValue = maxDivisor - 1; // All options must be less than the smallest number
+        const minOptionValue = 2;
+
+        // Calculate the total possible unique wrong options
+        const totalPossibleWrongOptions = maxOptionValue - minOptionValue + 1 - correctDivisors.length;
+        const totalOptionsNeeded = Math.min(12, totalPossibleWrongOptions + correctDivisors.length);
+        const wrongAnswersNeeded = totalOptionsNeeded - correctDivisors.length;
+
+        // Generate wrong answers less than both numbers
+        while (wrongOptions.length < wrongAnswersNeeded && attempts < maxAttempts) {
+            const randomNum = Math.floor(Math.random() * (maxOptionValue - minOptionValue + 1)) + minOptionValue;
+            if (
+                !correctDivisors.includes(randomNum) &&
+                !wrongOptions.includes(randomNum) &&
+                (number1 % randomNum !== 0 || number2 % randomNum !== 0)
+            ) {
+                wrongOptions.push(randomNum);
+            }
+            attempts++;
+        }
     }
 
     options.push(...correctDivisors, ...wrongOptions);
@@ -162,6 +190,7 @@ function generateOptions(numbers) {
 
     return options;
 }
+
 
 function renderOptions(options) {
     optionsContainer.innerHTML = '';
