@@ -1,0 +1,260 @@
+/* General Styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+h1 {
+    font-family: "Jacquarda Bastarda 9", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 4rem;
+}
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    max-height: 100%;
+    overflow: auto;
+}
+.game-content {
+    text-align: center;
+    width: 100%;
+    position: relative;
+}
+.level-selector {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px;
+    font-size: 1rem;
+    background-color: white;
+    border: 2px solid #333;
+    border-radius: 5px;
+    z-index: 100;
+}
+.timer {
+    font-size: 1.5rem;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin: 0;
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+.speaker-icon {
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+.number-display {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+.options-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.option {
+    padding: 10px 20px;
+    background-color: #e0e0e0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1rem;
+}
+.option:hover {
+    background-color: #d0d0d0;
+}
+.option.selected {
+    background-color: #4CAF50;
+    color: white;
+}
+.option.correct {
+    background-color: #4CAF50;
+    color: white;
+}
+.option.incorrect {
+    background-color: #f44336;
+    color: white;
+}
+.option.missing {
+    background-color: #FFC107;
+    color: black;
+}
+.score {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+#submit, #nextRound, #playAgain {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+#submit:hover, #nextRound:hover, #playAgain:hover {
+    background-color: #45a049;
+}
+.celebration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.celebration-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 90%;
+}
+@keyframes confetti {
+    0% { transform: translateY(0) rotateX(0) rotateY(0); }
+    100% { transform: translateY(100vh) rotateX(360deg) rotateY(360deg); }
+}
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background-color: #f0f0f0;
+    top: -10px;
+    z-index: 1000;
+    animation: confetti 5s ease-in-out infinite;
+}
+/* Styles for Horizontal Gauge and Characters */
+.score-gauge {
+    position: relative;
+    width: 100%;
+    height: 300px; /* Adjusted to match background image height */
+    background-image: url('path.png'); /* Replace with your background image */
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    margin-top: 20px;
+    border-radius: 10px; /* Optional, remove if not needed */
+}
+.soldier, .enemy-soldier, .deadKnight {
+    position: absolute;
+    bottom: 0;
+    width: 80px;
+    height: auto;
+    transition: left 0.5s;
+    max-width: 15%;
+    z-index: 90;
+}
+.soldier {
+    left: 0;
+}
+.enemy-soldier {
+    display: none;
+    width: 160px;
+    max-width: 25%;
+}
+.deadKnight {
+    display: none;
+    bottom: -25px;
+    width: 90px;
+    left: -80px;
+    max-width: 20%;
+    transition: left 1s;
+}
+.castle {
+    position: absolute;
+    bottom: -50px;
+    right: -40px;
+    width: 500px;
+    height: auto;
+    max-width: 30%;
+}
+/* Responsive Styles */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2rem;
+    }
+    .timer {
+        font-size: 1rem;
+        margin: 5px;
+        padding: 3px 6px;
+    }
+    .speaker-icon {
+        font-size: 1.2rem;
+        margin-left: 5px;
+    }
+    .number-display {
+        font-size: 2rem;
+    }
+    .option {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    .score {
+        font-size: 1.2rem;
+    }
+    #submit, #nextRound, #playAgain {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    .score-gauge {
+        height: 80px;
+    }
+    .soldier, .enemy-soldier, .deadKnight {
+        width: 60px;
+        max-width: 20%;
+    }
+    .castle {
+        width: 80px;
+        max-width: 20%;
+    }
+    .level-selector {
+        font-size: 0.9rem;
+        padding: 3px;
+    }
+}
+/* Landscape Orientation */
+@media only screen and (orientation: landscape) {
+    .game-container {
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        max-height: none;
+        border-radius: 0;
+        margin: 0;
+    }
+    body {
+        align-items: stretch;
+    }
+}
