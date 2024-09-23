@@ -289,13 +289,6 @@ $(document).ready(function() {
         const positionPercentage = Math.max(0, newScore / targetScore);
         const newLeft = gaugeWidth * positionPercentage;
 
-        // Move the soldier to the new position
-	$soldier.attr('src', $soldierRunning);
-        $soldier.css('left', `${newLeft}px`);
-        setTimeout(() => {
-            $soldier.attr('src', $soldierIdle);
-        }, 1000);
-
         // If score decreased, show enemy soldier attacking from the castle
         if (newScore < previousScore) {
             // Positions relative to the score gauge
@@ -314,16 +307,24 @@ $(document).ready(function() {
             $enemySoldier[0].offsetWidth;
 
             // Animate the enemy soldier moving towards the knight
-            setTimeout(() => {
-                $enemySoldier.css('left', `${enemyEndLeft}px`);
-                magicAttackSound.play();
-            }, 100); // Small delay to ensure enemy appears before moving
+	    $enemySoldier.css('left', `${enemyEndLeft}px`);
+	    magicAttackSound.play();
 
             // Hide the enemy soldier after the animation
             setTimeout(() => {
                 $enemySoldier.hide();
             }, 2000); // Duration should match the transition time
         }
+
+        // Move the soldier to the new position
+        setTimeout(() => {
+	    $soldier.attr('src', $soldierRunning);
+            $soldier.css('left', `${newLeft}px`);
+
+            setTimeout(() => {
+                 $soldier.attr('src', $soldierIdle);
+            }, 1000);
+        }, 1000);
 
         if (newScore > previousScore) {
             // Add 10 extra seconds for each correct answer
