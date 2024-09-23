@@ -42,6 +42,7 @@ $(document).ready(function() {
     let minNumber = 20; // Starting minimum number for difficulty
     let maxNumber = 30; // Starting maximum number for difficulty
     let maxMaxNumber = 150; // Default maxMaxNumber for medium level
+    let addNumber = 20; // Default addNumber for medium level
 
     let timerInterval; // Variable to store the timer interval
 
@@ -51,12 +52,15 @@ $(document).ready(function() {
         if (selectedLevel === 'easy') {
             minNumber = 4;
             maxMaxNumber = 100;
+            addNumber = 10;
         } else if (selectedLevel === 'medium') {
             minNumber = 20;
             maxMaxNumber = 150;
+            addNumber = 20;
         } else if (selectedLevel === 'hard') {
             minNumber = 30;
             maxMaxNumber = 200;
+            addNumber = 30;
         }
         // Reset game when level changes
         resetGame();
@@ -304,7 +308,7 @@ $(document).ready(function() {
 
         // Increase difficulty by increasing maxNumber
         if (maxNumber < maxMaxNumber) {
-            maxNumber += 20;
+            maxNumber += addNumber;
         }
     }
 
