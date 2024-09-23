@@ -23,6 +23,7 @@ const number1Display = document.getElementById('number1Display');
 const number2Display = document.getElementById('number2Display');
 const andText = document.getElementById('andText');
 const modeSelector = document.getElementById('modeSelector');
+const instructions = document.getElementById('instructions');
 
 let gameMode = 'single'; // Default game mode
 let currentNumbers; // For storing the numbers in the current round
@@ -339,10 +340,12 @@ function startNewRound() {
     messageDisplay.textContent = ''; // Clear any previous messages
 
     if (gameMode === 'single') {
+        instructions.style.display = 'none'; 
         number1Display.textContent = currentNumbers[0];
         number2Display.style.display = 'none';
         andText.style.display = 'none';
     } else if (gameMode === 'common') {
+        instructions.style.display = 'block'; 
         number1Display.textContent = currentNumbers[0];
         number2Display.textContent = currentNumbers[1];
         number2Display.style.display = 'inline';
