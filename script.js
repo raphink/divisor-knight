@@ -6,7 +6,7 @@ $(document).ready(function() {
         $optionsContainer = $('#optionsContainer'),
         $scoreDisplay = $('#score'),
         $submitButton = $('#submit'),
-        $nextRoundButton = $('#nextRound'), // This will be removed from UI
+        // Removed $nextRoundButton from UI
         $celebration = $('#celebration'),
         $playAgainButton = $('#playAgain'),
         $timerDisplay = $('#timer'),
@@ -226,11 +226,17 @@ $(document).ready(function() {
 
         const hasDivisors = correctDivisors.length > 0;
 
+        // Store old score before updating
+        const oldScore = score;
+
         if (!hasDivisors && $selectedOptions.length === 0) {
             // Correctly identified that there are no divisors
             points += 1;
             // Set feedback message
-            $feedbackMessage.text("Correct! You found all the divisors.");
+            $feedbackMessage.text("✅ Correct! You found all the divisors.");
+            // Award 10 extra seconds
+            timeLeft += 10;
+            refreshTimerDisplay();
         } else if (!hasDivisors && $selectedOptions.length > 0) {
             // Incorrectly selected options when there are no divisors
             $selectedOptions.each(function() {
@@ -265,16 +271,19 @@ $(document).ready(function() {
             });
 
             if (correctAnswers === correctDivisors.length && $selectedOptions.length === correctDivisors.length) {
-                $feedbackMessage.text("✅ Great job! You've found all the divisors.");
+		$feedbackMessage.text("✅ Great job! You've found all the divisors.");
+                // Award 10 extra seconds
+                timeLeft += 10;
+                refreshTimerDisplay();
             } else {
-                $feedbackMessage.text("⚠️ Some answers were incorrect or missing.");
+		$feedbackMessage.text("⚠️ Some answers were incorrect or missing.");
             }
         }
 
         // Update the score
         score += points;
         score = Math.max(0, score); // Ensure score doesn't go below 0
-        updateScore(score);
+        updateScore(oldScore, score);
 
         // Show the feedback modal with the message
         $feedbackModal.show();
@@ -299,14 +308,14 @@ $(document).ready(function() {
         }
     }
 
-    function updateScore(newScore) {
+    function updateScore(oldScore, newScore) {
         $scoreDisplay.text(newScore);
         const gaugeWidth = $scoreGauge.width() - $soldier.width() - 120; // Adjusted for padding and castle width
         const positionPercentage = Math.max(0, newScore / targetScore);
         const newLeft = gaugeWidth * positionPercentage;
 
         // If score decreased, show enemy soldier attacking from the castle
-        if (newScore < score) {
+        if (newScore < oldScore) {
             // Positions relative to the score gauge
             const gaugeOffset = $scoreGauge.offset();
             const castleOffset = $castle.offset();
@@ -342,10 +351,9 @@ $(document).ready(function() {
             }, 1000);
         }, 1000);
 
-        if (newScore > score) {
-            // Add 10 extra seconds for each correct answer
-            timeLeft += 10;
-            refreshTimerDisplay(); // Update timer display immediately
+        if (newScore > oldScore) {
+            // Extra seconds already handled in checkAnswer
+            // Just play the walk sound
             walkSound.play();
         }
     }
