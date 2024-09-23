@@ -488,12 +488,15 @@
         }
     
         function checkAnswer() {
+            // Pause the timer while showing results
+            clearInterval(timerInterval);
+
             const selectedOptions = Array.from(document.querySelectorAll('.option.selected'));
             const correctDivisors = currentOptions.filter(num => currentNumber % num === 0);
-    
+
             let points = 0;
             let correctAnswers = 0;
-    
+
             selectedOptions.forEach(option => {
                 const value = parseInt(option.textContent);
                 if (correctDivisors.includes(value)) {
@@ -506,7 +509,7 @@
                 }
                 option.classList.remove('selected');
             });
-    
+
             correctDivisors.forEach(divisor => {
                 const option = Array.from(document.querySelectorAll('.option')).find(el => parseInt(el.textContent) === divisor);
                 if (option && !option.classList.contains('correct')) {
@@ -514,15 +517,15 @@
                     points--; // Missing answers remove 1 point
                 }
             });
-    
+
             let previousScore = score;
             score += points;
             score = Math.max(0, score); // Ensure score doesn't go below 0
             updateScore(previousScore, score);
-    
+
             submitButton.style.display = 'none';
             nextRoundButton.style.display = 'inline-block';
-    
+
             if (score >= targetScore) {
                 setTimeout(() => {
                     soldier.style.display = 'none';
@@ -536,12 +539,13 @@
             } else if (score <= 0) {
                 endGame('score');
             }
-    
+
             // Increase difficulty by increasing maxNumber
             if (maxNumber < maxMaxNumber) {
                 maxNumber += 20;
             }
         }
+
     
         function updateScore(previousScore, newScore) {
             scoreDisplay.textContent = newScore;
@@ -580,6 +584,9 @@
             renderOptions(currentOptions);
             submitButton.style.display = 'inline-block';
             nextRoundButton.style.display = 'none';
+
+            // Resume the timer
+            startTimer();
         }
     
         function throwParty() {
