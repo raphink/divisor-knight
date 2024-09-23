@@ -297,8 +297,11 @@
     <audio id="defeatSound">
         <source src="dead-8bit-41400.mp3" type="audio/mp3">
     </audio>
-    <audio id="magicAttack">
+    <audio id="magicAttackSound">
         <source src="magic-spell-shoot-sound-effect-full-pack-link-in-comments-236816.mp3" type="audio/mp3">
+    </audio>
+    <audio id="noTimeSound">
+        <source src="horse-123780.mp3" type="audio/mp3">
     </audio>
 
     <script>
@@ -319,7 +322,8 @@
         const walkSound = document.getElementById('walkSound');
         const victorySound = document.getElementById('victorySound');
         const defeatSound = document.getElementById('defeatSound');
-        const magicAttackSound = document.getElementById('magicAttack');
+        const magicAttackSound = document.getElementById('magicAttackSound');
+        const noTimeSound = document.getElementById('noTimeSound');
 
         const initialScore = 10; // Configurable initial score
         const targetScore = 50; // Configurable target score
@@ -517,6 +521,7 @@
 
             // Change timer color to red when less than 1 minute
             if (timeLeft <= 10) {
+                noTimeSound.play();
                 timerDisplay.style.color = 'red';
             } else {
                 timerDisplay.style.color = 'black';
