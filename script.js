@@ -1,33 +1,33 @@
 $(document).ready(function() {
-    const $numberDisplay = $('#numberDisplay');
-    const $number1Display = $('#number1Display');
-    const $number2Display = $('#number2Display');
-    const $andText = $('#andText');
-    const $optionsContainer = $('#optionsContainer');
-    const $scoreDisplay = $('#score');
-    const $submitButton = $('#submit');
-    const $nextRoundButton = $('#nextRound');
-    const $celebration = $('#celebration');
-    const $playAgainButton = $('#playAgain');
-    const $timerDisplay = $('#timer');
-    const $soldier = $('#soldier');
-    const $soldierIdle = 'jens-steenmetz-swordsman-idle.gif';
-    const $soldierRunning = 'jens-steenmetz-swordsman-running.gif';
-    const $enemySoldier = $('#enemySoldier');
-    const $deadKnight = $('#deadKnight');
-    const $scoreGauge = $('#scoreGauge');
-    const $speakerIcon = $('#speakerIcon');
-    const backgroundMusic = document.getElementById('backgroundMusic');
-    const walkSound = document.getElementById('walkSound');
-    const victorySound = document.getElementById('victorySound');
-    const defeatSound = document.getElementById('defeatSound');
-    const magicAttackSound = document.getElementById('magicAttackSound');
-    const noTimeSound = document.getElementById('noTimeSound');
-    const $levelSelector = $('#levelSelector');
-    const $castle = $('#castle');
-    const $modeSelector = $('#modeSelector');
-    const $instructions = $('#instructions');
-    const $messageDisplay = $('#messageDisplay');
+    const $numberDisplay = $('#numberDisplay'),
+        $number1Display = $('#number1Display'),
+        $number2Display = $('#number2Display'),
+        $andText = $('#andText'),
+        $optionsContainer = $('#optionsContainer'),
+        $scoreDisplay = $('#score'),
+        $submitButton = $('#submit'),
+        $nextRoundButton = $('#nextRound'),
+        $celebration = $('#celebration'),
+        $playAgainButton = $('#playAgain'),
+        $timerDisplay = $('#timer'),
+        $soldier = $('#soldier'),
+        $soldierIdle = 'jens-steenmetz-swordsman-idle.gif',
+        $soldierRunning = 'jens-steenmetz-swordsman-running.gif',
+        $enemySoldier = $('#enemySoldier'),
+        $deadKnight = $('#deadKnight'),
+        $scoreGauge = $('#scoreGauge'),
+        $speakerIcon = $('#speakerIcon'),
+        backgroundMusic = document.getElementById('backgroundMusic'),
+        walkSound = document.getElementById('walkSound'),
+        victorySound = document.getElementById('victorySound'),
+        defeatSound = document.getElementById('defeatSound'),
+        magicAttackSound = document.getElementById('magicAttackSound'),
+        noTimeSound = document.getElementById('noTimeSound'),
+        $levelSelector = $('#levelSelector'),
+        $castle = $('#castle'),
+        $modeSelector = $('#modeSelector'),
+        $instructions = $('#instructions'),
+        $messageDisplay = $('#messageDisplay');
 
     let gameMode = 'single'; // Default game mode
     let currentNumbers; // For storing the numbers in the current round
@@ -44,7 +44,7 @@ $(document).ready(function() {
     let timerInterval; // Variable to store the timer interval
 
     // Function to update maxMaxNumber and minNumber based on selected level
-    function updateLevel() {
+    const updateLevel = () => {
         const selectedLevel = $levelSelector.val();
         if (selectedLevel === 'easy') {
             minNumber = 4;
@@ -129,7 +129,7 @@ $(document).ready(function() {
         if (gameMode === 'single') {
             const number = number1;
             // Generate correct divisors less than the number
-            for (let i = 2; i < number; i++) {
+            for (let i = 2; i <= number; i++) {
                 if (number % i === 0) {
                     correctDivisors.push(i);
                 }
@@ -255,7 +255,7 @@ $(document).ready(function() {
             });
         }
 
-        let previousScore = score;
+        const previousScore = score;
         score += points;
         score = Math.max(0, score); // Ensure score doesn't go below 0
         updateScore(previousScore, score);
@@ -269,7 +269,7 @@ $(document).ready(function() {
                 victorySound.play();
                 $celebration.find('h2').text('🎉 Congratulations!');
                 $celebration.find('p').text(`You've reached the target score!`);
-                $celebration.modal();
+                $celebration.modal('show');
                 throwParty();
                 clearInterval(timerInterval); // Stop the timer
             }, 1000);
@@ -307,8 +307,8 @@ $(document).ready(function() {
             $enemySoldier[0].offsetWidth;
 
             // Animate the enemy soldier moving towards the knight
-	    $enemySoldier.css('left', `${enemyEndLeft}px`);
-	    magicAttackSound.play();
+            $enemySoldier.css('left', `${enemyEndLeft}px`);
+            magicAttackSound.play();
 
             // Hide the enemy soldier after the animation
             setTimeout(() => {
@@ -318,7 +318,7 @@ $(document).ready(function() {
 
         // Move the soldier to the new position
         setTimeout(() => {
-	    $soldier.attr('src', $soldierRunning);
+            $soldier.attr('src', $soldierRunning);
             $soldier.css('left', `${newLeft}px`);
 
             setTimeout(() => {
@@ -425,7 +425,7 @@ $(document).ready(function() {
 
             $celebration.find('h2').text("⌛ Time's Up!");
             $celebration.find('p').text(`Your final score is ${score} points.`);
-            $celebration.modal();
+            $celebration.modal('show');
         } else if (reason === 'score') {
             // You died
             $deadKnight.show().css('left', '0px');
@@ -439,7 +439,7 @@ $(document).ready(function() {
             setTimeout(() => {
                 $celebration.find('h2').text('Game Over!');
                 $celebration.find('p').text(`You died!`);
-                $celebration.modal();
+                $celebration.modal('show');
             }, 2000);
         }
     }
@@ -482,3 +482,4 @@ $(document).ready(function() {
     startNewRound();
     startTimer(); // Start the timer when the game loads
 });
+
