@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta and title tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divisor Knight</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+            width: 800px;
+        }
+        .game-content {
+            text-align: center;
+            width: 100%;
+        }
+        .number-display {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            padding: 10px 20px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #d0d0d0;
+        }
+        .option.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .option.correct {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .option.incorrect {
+            background-color: #f44336;
+            color: white;
+        }
+        .option.missing {
+            background-color: #FFC107;
+            color: black;
+        }
+        .score {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        #submit, #nextRound {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        #submit:hover, #nextRound:hover {
+            background-color: #45a049;
+        }
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .celebration-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .timer {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        @keyframes confetti {
+            0% { transform: translateY(0) rotateX(0) rotateY(0); }
+            100% { transform: translateY(100vh) rotateX(360deg) rotateY(360deg); }
+        }
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f0f0f0;
+            position: absolute;
+            top: -10px;
+            z-index: 1000;
+            animation: confetti 5s ease-in-out infinite;
+        }
+        /* Styles for Horizontal Gauge and Soldiers */
+        .score-gauge {
+            position: relative;
+            width: 600px;
+            height: 100px;
+            background-color: #e0e0e0;
+            border-radius: 50px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .gauge-track {
+            position: absolute;
+            top: 50%;
+            left: 25px;
+            width: calc(100% - 50px);
+            height: 10px;
+            background-color: #ccc;
+            transform: translateY(-50%);
+        }
+        .soldier, .enemy-soldier {
+            position: absolute;
+            bottom: 0;
+            width: 80px;
+            height: auto;
+            transition: left 0.5s;
+        }
+        .soldier {
+            left: 0;
+        }
+        .enemy-soldier {
+            display: none;
+            width: 160px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-content">
+            <h1>Enhanced Divisor Finder Game</h1>
+            <div class="timer" id="timer">5:00</div>
+            <div class="number-display" id="numberDisplay"></div>
+            <div class="options-container" id="optionsContainer"></div>
+            <div class="score">Score: <span id="score">20</span></div>
+            <button id="submit">Submit</button>
+            <button id="nextRound" style="display: none;">Next Round</button>
+        </div>
+        <div class="score-gauge" id="scoreGauge">
+            <div class="gauge-track"></div>
+            <!-- Updated to use img elements -->
+            <img src="https://cdnb.artstation.com/p/assets/images/images/046/439/899/original/jens-steenmetz-swordsman-idle.gif?1645115580" alt="Soldier" class="soldier" id="soldier">
+            <img src="https://i.pinimg.com/originals/20/a4/fa/20a4fa9b235aa28f73caa31805289b83.gif" alt="Enemy Soldier" class="enemy-soldier" id="enemySoldier">
+        </div>
+    </div>
+    <div class="celebration" id="celebration">
+        <div class="celebration-content">
+            <h2>Game Over!</h2>
+            <p></p>
+            <button id="playAgain">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        const numberDisplay = document.getElementById('numberDisplay');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const scoreDisplay = document.getElementById('score');
+        const submitButton = document.getElementById('submit');
+        const nextRoundButton = document.getElementById('nextRound');
+        const celebration = document.getElementById('celebration');
+        const playAgainButton = document.getElementById('playAgain');
+        const timerDisplay = document.getElementById('timer');
+        const soldier = document.getElementById('soldier');
+        const enemySoldier = document.getElementById('enemySoldier');
+        const scoreGauge = document.getElementById('scoreGauge');
+
+        const initialScore = 20; // Configurable initial score
+        const targetScore = 100; // Configurable target score
+
+        let currentNumber;
+        let currentOptions;
+        let score = initialScore; // Start the score at initialScore points
+        let timeLeft = 300; // 5 minutes in seconds
+
+        function isPrime(num) {
+            if (num <= 1) return false;
+            if (num <= 3) return true;
+            if (num % 2 === 0 || num % 3 === 0) return false;
+            for (let i = 5; i <= Math.sqrt(num); i += 6) {
+                if (num % i === 0 || num % (i + 2) === 0)
+                    return false;
+            }
+            return true;
+        }
+
+        function generateNumber() {
+            let num;
+            do {
+                num = Math.floor(Math.random() * 142) + 3; // Generates numbers from 3 to 144
+            } while (isPrime(num));
+            return num;
+        }
+
+        function generateOptions(number) {
+            const options = [];
+            for (let i = 2; i <= Math.floor(number / 2); i++) {
+                if (number % i === 0) {
+                    options.push(i);
+                }
+            }
+
+            // Add wrong answers
+            while (options.length < 12) {
+                const randomNum = Math.floor(Math.random() * (number - 2)) + 2;
+                if (!options.includes(randomNum) && number % randomNum !== 0) {
+                    options.push(randomNum);
+                }
+            }
+
+            return options.sort((a, b) => a - b);
+        }
+
+        function renderOptions(options) {
+            optionsContainer.innerHTML = '';
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option');
+                button.addEventListener('click', () => {
+                    button.classList.toggle('selected');
+                });
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer() {
+            const selectedOptions = Array.from(document.querySelectorAll('.option.selected'));
+            const correctDivisors = currentOptions.filter(num => currentNumber % num === 0);
+
+            let points = 0;
+            selectedOptions.forEach(option => {
+                const value = parseInt(option.textContent);
+                if (correctDivisors.includes(value)) {
+                    option.classList.add('correct');
+                    points++;
+                } else {
+                    option.classList.add('incorrect');
+                    points -= 2; // Wrong answers remove 2 points
+                }
+                option.classList.remove('selected');
+            });
+
+            correctDivisors.forEach(divisor => {
+                const option = Array.from(document.querySelectorAll('.option')).find(el => parseInt(el.textContent) === divisor);
+                if (option && !option.classList.contains('correct')) {
+                    option.classList.add('missing');
+                    points--; // Missing answers remove 1 point
+                }
+            });
+
+            let previousScore = score;
+            score += points;
+            score = Math.max(0, score); // Ensure score doesn't go below 0
+            updateScore(previousScore, score);
+
+            submitButton.style.display = 'none';
+            nextRoundButton.style.display = 'inline-block';
+
+            if (score >= targetScore) {
+                celebration.querySelector('h2').textContent = 'Congratulations!';
+                celebration.querySelector('p').textContent = `You've reached the target score!`;
+                celebration.style.display = 'flex';
+                throwParty();
+            } else if (score <= 0) {
+                endGame('score');
+            }
+        }
+
+        function updateScore(previousScore, newScore) {
+            scoreDisplay.textContent = newScore;
+            const gaugeWidth = scoreGauge.clientWidth - soldier.clientWidth - 20; // Adjusted for padding
+            const positionPercentage = Math.max(0, newScore / targetScore);
+            const newLeft = gaugeWidth * positionPercentage;
+
+            // If score decreased, show enemy soldier attacking
+            if (newScore < previousScore) {
+                enemySoldier.style.left = `${newLeft + soldier.clientWidth}px`;
+                enemySoldier.style.display = 'block';
+
+                // Hide the enemy soldier after some time
+                setTimeout(() => {
+                    enemySoldier.style.display = 'none';
+                }, 1000);
+            }
+
+            // Move the soldier to the new position
+            setTimeout(() => {
+                soldier.style.left = `${newLeft}px`;
+            }, 1000);
+        }
+
+        function startNewRound() {
+            currentNumber = generateNumber();
+            currentOptions = generateOptions(currentNumber);
+            numberDisplay.textContent = currentNumber;
+            renderOptions(currentOptions);
+            submitButton.style.display = 'inline-block';
+            nextRoundButton.style.display = 'none';
+        }
+
+        function throwParty() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                document.body.appendChild(confetti);
+
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeLeft > 0) {
+                timeLeft--;
+                setTimeout(updateTimer, 1000);
+            } else {
+                endGame('time');
+            }
+        }
+
+        function endGame(reason) {
+            celebration.style.display = 'flex';
+            if (reason === 'time') {
+                celebration.querySelector('h2').textContent = 'Time\'s Up!';
+                celebration.querySelector('p').textContent = `Your final score is ${score} points.`;
+            } else if (reason === 'score') {
+                celebration.querySelector('h2').textContent = 'Game Over!';
+                celebration.querySelector('p').textContent = `Your score dropped to zero.`;
+            }
+        }
+
+        submitButton.addEventListener('click', checkAnswer);
+        nextRoundButton.addEventListener('click', startNewRound);
+        playAgainButton.addEventListener('click', () => {
+            score = initialScore; // Reset score to initialScore
+            timeLeft = 300;
+            scoreDisplay.textContent = score;
+
+            // Set soldier to initial position
+            const gaugeWidth = scoreGauge.clientWidth - soldier.clientWidth - 20; // Adjusted for padding
+            const positionPercentage = Math.max(0, score / targetScore);
+            const initialLeft = gaugeWidth * positionPercentage;
+            soldier.style.left = `${initialLeft}px`;
+
+            celebration.style.display = 'none';
+            startNewRound();
+            updateTimer();
+        });
+
+        // Set initial score display
+        scoreDisplay.textContent = score;
+
+        // Place soldier at initial position
+        window.addEventListener('load', () => {
+            const gaugeWidth = scoreGauge.clientWidth - soldier.clientWidth - 20; // Adjusted for padding
+            const positionPercentage = Math.max(0, score / targetScore);
+            const initialLeft = gaugeWidth * positionPercentage;
+            soldier.style.left = `${initialLeft}px`;
+        });
+
+        startNewRound();
+        updateTimer();
+    </script>
+</body>
+</html>
+
