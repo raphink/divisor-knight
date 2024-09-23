@@ -439,13 +439,13 @@
             score = Math.max(0, score); // Ensure score doesn't go below 0
             updateScore(previousScore, score);
 
-            // Add 10 extra seconds for each correct answer
-            timeLeft += correctAnswers * 10;
-
             submitButton.style.display = 'none';
             nextRoundButton.style.display = 'inline-block';
 
             if (score >= targetScore) {
+                // Add 10 extra seconds for each correct answer
+                timeLeft += 10;
+
                 setTimeout(() => {
                     soldier.style.display = 'none';
                     victorySound.play();
