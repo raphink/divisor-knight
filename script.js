@@ -19,6 +19,13 @@ const magicAttackSound = document.getElementById('magicAttackSound');
 const noTimeSound = document.getElementById('noTimeSound');
 const levelSelector = document.getElementById('levelSelector');
 const castle = document.getElementById('castle');
+const number1Display = document.getElementById('number1Display');
+const number2Display = document.getElementById('number2Display');
+const andText = document.getElementById('andText');
+const modeSelector = document.getElementById('modeSelector');
+
+let gameMode = 'single'; // Default game mode
+let currentNumbers; // For storing the numbers in the current round
 
 const initialScore = 10; // Configurable initial score
 const targetScore = 50; // Configurable target score
@@ -53,6 +60,12 @@ function updateLevel() {
 // Event listener for level selector
 levelSelector.addEventListener('change', updateLevel);
 
+// Event listener for mode selector
+modeSelector.addEventListener('change', () => {
+    gameMode = modeSelector.value;
+    resetGame();
+});
+
 // Play music automatically when the game starts
 backgroundMusic.play().catch(error => {
     // Handle autoplay restrictions
@@ -86,55 +99,71 @@ function isPrime(num) {
 }
 
 function generateNumber() {
-    let num;
-    do {
-        num = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber; // Generates numbers from minNumber to maxNumber
-    } while (isPrime(num));
-    return num;
+    if (gameMode === 'single') {
+        let num;
+        do {
+            num = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
+        } while (isPrime(num));
+        return [num]; // Return an array for consistency
+    } else if (gameMode === 'common') {
+        let num1, num2;
+        do {
+            num1 = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
+            num2 = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
+        } while (isPrime(num1) || isPrime(num2));
+        return [num1, num2];
+    }
 }
 
-function generateOptions(number) {
+function generateOptions(numbers) {
+    const [number1, number2] = numbers;
     const options = [];
-    const correctDivisors = [];
+    let correctDivisors = [];
     const wrongOptions = [];
-    const maxAttempts = 100; // Maximum attempts to prevent infinite loop
+    const maxAttempts = 200; // Increased attempts for more complex calculations
     let attempts = 0;
 
-    // Generate correct divisors less than the number
-    for (let i = 2; i < number; i++) {
-        if (number % i === 0) {
-            correctDivisors.push(i);
+    if (gameMode === 'single') {
+        const number = number1;
+        // Generate correct divisors less than the number
+        for (let i = 2; i < number; i++) {
+            if (number % i === 0) {
+                correctDivisors.push(i);
+            }
+        }
+        const maxOptionValue = number - 1; // All options must be less than the number
+        const minOptionValue = 2;
+        // Rest of the existing code for single mode...
+    } else if (gameMode === 'common') {
+        // Find common divisors less than both numbers
+        for (let i = 2; i <= Math.min(number1, number2); i++) {
+            if (number1 % i === 0 && number2 % i === 0) {
+                correctDivisors.push(i);
+            }
+        }
+        const maxOptionValue = Math.min(number1, number2) - 1;
+        const minOptionValue = 2;
+        // Calculate the total possible unique wrong options
+        const totalPossibleWrongOptions = maxOptionValue - minOptionValue + 1 - correctDivisors.length;
+        // Calculate the number of wrong answers needed
+        const totalOptionsNeeded = Math.min(12, totalPossibleWrongOptions + correctDivisors.length);
+        const wrongAnswersNeeded = totalOptionsNeeded - correctDivisors.length;
+
+        // Generate wrong answers less than both numbers
+        while (wrongOptions.length < wrongAnswersNeeded && attempts < maxAttempts) {
+            const randomNum = Math.floor(Math.random() * (maxOptionValue - minOptionValue + 1)) + minOptionValue;
+            if (
+                !options.includes(randomNum) &&
+                !wrongOptions.includes(randomNum) &&
+                (number1 % randomNum !== 0 || number2 % randomNum !== 0)
+            ) {
+                wrongOptions.push(randomNum);
+            }
+            attempts++;
         }
     }
 
-    options.push(...correctDivisors);
-
-    // Calculate the range for possible wrong answers
-    const maxOptionValue = number - 1; // All options must be less than the number
-    const minOptionValue = 2; // Smallest possible divisor
-
-    // Calculate the total possible unique wrong options
-    const totalPossibleWrongOptions = maxOptionValue - minOptionValue + 1 - correctDivisors.length;
-
-    // Calculate the number of wrong answers needed
-    const totalOptionsNeeded = Math.min(12, totalPossibleWrongOptions + correctDivisors.length);
-    const wrongAnswersNeeded = totalOptionsNeeded - correctDivisors.length;
-
-    // Generate wrong answers less than the number
-    while (wrongOptions.length < wrongAnswersNeeded && attempts < maxAttempts) {
-        const randomNum = Math.floor(Math.random() * (maxOptionValue - minOptionValue + 1)) + minOptionValue;
-        if (
-            !options.includes(randomNum) &&
-            !wrongOptions.includes(randomNum) &&
-            number % randomNum !== 0
-        ) {
-            wrongOptions.push(randomNum);
-        }
-        attempts++;
-    }
-
-    options.push(...wrongOptions);
-
+    options.push(...correctDivisors, ...wrongOptions);
     // Shuffle options
     options.sort(() => Math.random() - 0.5);
 
@@ -159,7 +188,14 @@ function checkAnswer() {
     clearInterval(timerInterval);
 
     const selectedOptions = Array.from(document.querySelectorAll('.option.selected'));
-    const correctDivisors = currentOptions.filter(num => currentNumber % num === 0);
+    let correctDivisors = [];
+    const [number1, number2] = currentNumbers;
+
+    if (gameMode === 'single') {
+        correctDivisors = currentOptions.filter(num => number1 % num === 0);
+    } else if (gameMode === 'common') {
+        correctDivisors = currentOptions.filter(num => number1 % num === 0 && number2 % num === 0);
+    }
 
     let points = 0;
     let correctAnswers = 0;
@@ -263,9 +299,20 @@ function updateScore(previousScore, newScore) {
 }
 
 function startNewRound() {
-    currentNumber = generateNumber();
-    currentOptions = generateOptions(currentNumber);
-    numberDisplay.textContent = currentNumber;
+    currentNumbers = generateNumber();
+    currentOptions = generateOptions(currentNumbers);
+
+    if (gameMode === 'single') {
+        number1Display.textContent = currentNumbers[0];
+        number2Display.style.display = 'none';
+        andText.style.display = 'none';
+    } else if (gameMode === 'common') {
+        number1Display.textContent = currentNumbers[0];
+        number2Display.textContent = currentNumbers[1];
+        number2Display.style.display = 'inline';
+        andText.style.display = 'inline';
+    }
+
     renderOptions(currentOptions);
     submitButton.style.display = 'inline-block';
     nextRoundButton.style.display = 'none';

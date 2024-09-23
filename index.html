@@ -14,17 +14,17 @@
 </head>
 <body>
     <div class="game-container">
+        <!-- Mode Selector -->
+        <select class="mode-selector" id="modeSelector">
+            <option value="single" selected>Single Number Mode</option>
+            <option value="common">Common Divisors Mode</option>
+        </select>
+
         <!-- Level Selector -->
         <select class="level-selector" id="levelSelector">
             <option value="easy">Easy</option>
             <option value="medium" selected>Medium</option>
             <option value="hard">Hard</option>
-        </select>
-
-        <!-- Mode Selector -->
-        <select class="mode-selector" id="modeSelector">
-            <option value="single" selected>Single Number Mode</option>
-            <option value="common">Common Divisors Mode</option>
         </select>
 
         <div class="game-content">
@@ -34,7 +34,7 @@
             </div>
             <div class="number-display" id="numberDisplay">
                 <span id="number1Display"></span>
-                <span id="andText" style="display: none;"> and </span>
+                <span id="andText" style="display: none;">&nbsp;and&nbsp;</span>
                 <span id="number2Display"></span>
             </div>
             <div class="options-container" id="optionsContainer"></div>
