@@ -412,7 +412,7 @@ $(document).ready(function() {
         clearInterval(timerInterval); // Stop the timer
         if (reason === 'time') {
             // You died
-            $deadKnight.show().css('left', $soldier.css('left'));
+            $deadKnight.css('left', $soldier.css('left')).show();
             defeatSound.play();
 
             // Hide the knight to simulate defeat
