@@ -330,7 +330,6 @@
     <audio id="noTimeSound">
         <source src="horse-123780.mp3" type="audio/mp3">
     </audio>
-
     <script>
         const numberDisplay = document.getElementById('numberDisplay');
         const optionsContainer = document.getElementById('optionsContainer');
@@ -360,17 +359,23 @@
         let currentOptions;
         let score = initialScore; // Start the score at initialScore points
         let timeLeft = 60; // 1 minute in seconds
+        let minNumber = 20; // Starting minimum number for difficulty
         let maxNumber = 30; // Starting maximum number for difficulty
         let maxMaxNumber = 150; // Default maxMaxNumber for medium level
     
-        // Function to update maxMaxNumber based on selected level
+        let timerInterval; // Variable to store the timer interval
+    
+        // Function to update maxMaxNumber and minNumber based on selected level
         function updateLevel() {
             const selectedLevel = levelSelector.value;
             if (selectedLevel === 'easy') {
+                minNumber = 4;
                 maxMaxNumber = 100;
             } else if (selectedLevel === 'medium') {
+                minNumber = 20;
                 maxMaxNumber = 150;
             } else if (selectedLevel === 'hard') {
+                minNumber = 30;
                 maxMaxNumber = 200;
             }
             // Reset game when level changes
@@ -415,7 +420,7 @@
         function generateNumber() {
             let num;
             do {
-                num = Math.floor(Math.random() * (maxNumber - 3 + 1)) + 3; // Generates numbers from 3 to maxNumber
+                num = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber; // Generates numbers from minNumber to maxNumber
             } while (isPrime(num));
             return num;
         }
@@ -496,6 +501,7 @@
                     celebration.querySelector('p').textContent = `You've reached the target score!`;
                     celebration.style.display = 'flex';
                     throwParty();
+                    clearInterval(timerInterval); // Stop the timer
                 }, 1000);
             } else if (score <= 0) {
                 endGame('score');
@@ -576,15 +582,21 @@
                 timerDisplay.style.color = 'black';
             }
     
-            if (timeLeft > 0) {
-                timeLeft--;
-                setTimeout(updateTimer, 1000);
-            } else {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
                 endGame('time');
             }
+            timeLeft--;
+        }
+    
+        function startTimer() {
+            // Clear any existing timer
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
         }
     
         function endGame(reason) {
+            clearInterval(timerInterval); // Stop the timer
             if (reason === 'time') {
                 // You died
                 deadKnight.style.display = 'block';
@@ -622,9 +634,10 @@
         });
     
         function resetGame() {
+            clearInterval(timerInterval); // Clear any existing timer
             score = initialScore; // Reset score to initialScore
             timeLeft = 60; // Reset time
-            maxNumber = 30; // Reset maxNumber for difficulty
+            maxNumber = minNumber + 10; // Reset maxNumber based on minNumber
             scoreDisplay.textContent = score;
             soldier.style.left = '0px';
             timerDisplay.style.color = 'black';
@@ -633,6 +646,7 @@
             soldier.style.display = 'block'; // Show knight again
             placeSoldierAtStart();
             startNewRound();
+            startTimer(); // Restart the timer
         }
     
         // Set initial score display
@@ -648,7 +662,8 @@
     
         placeSoldierAtStart();
         startNewRound();
-        updateTimer();
+        startTimer(); // Start the timer when the game loads
     </script>
+    
 </body>
 </html>
