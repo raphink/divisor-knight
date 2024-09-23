@@ -334,6 +334,7 @@
         backgroundMusic.play().catch(error => {
             // Handle autoplay restrictions
             console.log('Autoplay was prevented. User interaction is required to start audio.');
+            backgroundMusic.pause();
             speakerIcon.textContent = '🔇';
         });
 
