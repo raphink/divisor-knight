@@ -297,6 +297,9 @@
     <audio id="defeatSound">
         <source src="dead-8bit-41400.mp3" type="audio/mp3">
     </audio>
+    <audio id="magicAttack">
+        <source src="magic-spell-shoot-sound-effect-full-pack-link-in-comments-236816.mp3" type="audio/mp3">
+    </audio>
 
     <script>
         const numberDisplay = document.getElementById('numberDisplay');
@@ -316,6 +319,7 @@
         const walkSound = document.getElementById('walkSound');
         const victorySound = document.getElementById('victorySound');
         const defeatSound = document.getElementById('defeatSound');
+        const magicAttackSound = document.getElementById('magicAttack');
 
         const initialScore = 10; // Configurable initial score
         const targetScore = 50; // Configurable target score
@@ -462,6 +466,7 @@
             if (newScore < previousScore) {
                 enemySoldier.style.left = `${newLeft + soldier.clientWidth}px`;
                 enemySoldier.style.display = 'block';
+                magicAttackSound.play();
 
                 // Hide the enemy soldier after some time
                 setTimeout(() => {
