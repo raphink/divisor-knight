@@ -269,7 +269,7 @@ $(document).ready(function() {
                 victorySound.play();
                 $celebration.find('h2').text('Congratulations!');
                 $celebration.find('p').text(`You've reached the target score!`);
-                $celebration.show();
+                $celebration.modal();
                 throwParty();
                 clearInterval(timerInterval); // Stop the timer
             }, 1000);
@@ -425,7 +425,7 @@ $(document).ready(function() {
 
             $celebration.find('h2').text("Time's Up!");
             $celebration.find('p').text(`Your final score is ${score} points.`);
-            $celebration.show();
+            $celebration.modal();
         } else if (reason === 'score') {
             // You died
             $deadKnight.show().css('left', '0px');
@@ -439,7 +439,7 @@ $(document).ready(function() {
             setTimeout(() => {
                 $celebration.find('h2').text('Game Over!');
                 $celebration.find('p').text(`You died!`);
-                $celebration.show();
+                $celebration.modal();
             }, 2000);
         }
     }
@@ -447,7 +447,7 @@ $(document).ready(function() {
     $submitButton.on('click', checkAnswer);
     $nextRoundButton.on('click', startNewRound);
     $playAgainButton.on('click', function() {
-        $celebration.hide();
+        $celebration.modal('hide');
         resetGame();
     });
 
