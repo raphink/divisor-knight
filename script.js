@@ -27,6 +27,7 @@ const modeSelector = document.getElementById('modeSelector');
 let gameMode = 'single'; // Default game mode
 let currentNumbers; // For storing the numbers in the current round
 
+const messageDisplay = document.getElementById('messageDisplay');
 const initialScore = 10; // Configurable initial score
 const targetScore = 50; // Configurable target score
 
@@ -209,6 +210,9 @@ function checkAnswer() {
     // Pause the timer while showing results
     clearInterval(timerInterval);
 
+    // Clear previous messages
+    messageDisplay.textContent = '';
+
     const selectedOptions = Array.from(document.querySelectorAll('.option.selected'));
     let correctDivisors = [];
     const [number1, number2] = currentNumbers;
@@ -222,26 +226,32 @@ function checkAnswer() {
     let points = 0;
     let correctAnswers = 0;
 
-    selectedOptions.forEach(option => {
-        const value = parseInt(option.textContent);
-        if (correctDivisors.includes(value)) {
-            option.classList.add('correct');
-            points++;
-            correctAnswers++;
-        } else {
-            option.classList.add('incorrect');
-            points -= 2; // Wrong answers remove 2 points
-        }
-        option.classList.remove('selected');
-    });
+    if (correctDivisors.length === 0 && selectedOptions.length === 0) {
+        // The player correctly identified that there are no common divisors
+        points++;
+        messageDisplay.textContent = "Correct! There are no common divisors between the two numbers.";
+    } else {
+        selectedOptions.forEach(option => {
+            const value = parseInt(option.textContent);
+            if (correctDivisors.includes(value)) {
+                option.classList.add('correct');
+                points++;
+                correctAnswers++;
+            } else {
+                option.classList.add('incorrect');
+                points -= 2; // Wrong answers remove 2 points
+            }
+            option.classList.remove('selected');
+        });
 
-    correctDivisors.forEach(divisor => {
-        const option = Array.from(document.querySelectorAll('.option')).find(el => parseInt(el.textContent) === divisor);
-        if (option && !option.classList.contains('correct')) {
-            option.classList.add('missing');
-            points--; // Missing answers remove 1 point
-        }
-    });
+        correctDivisors.forEach(divisor => {
+            const option = Array.from(document.querySelectorAll('.option')).find(el => parseInt(el.textContent) === divisor);
+            if (option && !option.classList.contains('correct')) {
+                option.classList.add('missing');
+                points--; // Missing answers remove 1 point
+            }
+        });
+    }
 
     let previousScore = score;
     score += points;
@@ -252,6 +262,7 @@ function checkAnswer() {
     nextRoundButton.style.display = 'inline-block';
 
     if (score >= targetScore) {
+        // Existing victory logic
         setTimeout(() => {
             soldier.style.display = 'none';
             victorySound.play();
@@ -262,6 +273,7 @@ function checkAnswer() {
             clearInterval(timerInterval); // Stop the timer
         }, 1000);
     } else if (score <= 0) {
+        // Existing defeat logic
         endGame('score');
     }
 
@@ -323,6 +335,8 @@ function updateScore(previousScore, newScore) {
 function startNewRound() {
     currentNumbers = generateNumber();
     currentOptions = generateOptions(currentNumbers);
+
+    messageDisplay.textContent = ''; // Clear any previous messages
 
     if (gameMode === 'single') {
         number1Display.textContent = currentNumbers[0];
