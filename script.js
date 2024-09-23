@@ -104,9 +104,7 @@ $(document).ready(function() {
     function generateNumber() {
         if (gameMode === 'single') {
             let num;
-            do {
-                num = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
-            } while (isPrime(num));
+            num = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
             return [num]; // Return an array for consistency
         } else if (gameMode === 'common') {
             let num1, num2;
@@ -129,7 +127,7 @@ $(document).ready(function() {
         if (gameMode === 'single') {
             const number = number1;
             // Generate correct divisors less than the number
-            for (let i = 2; i <= number; i++) {
+            for (let i = 2; i < number; i++) {
                 if (number % i === 0) {
                     correctDivisors.push(i);
                 }
@@ -226,16 +224,28 @@ $(document).ready(function() {
         let points = 0;
         let correctAnswers = 0;
 
-        if (correctDivisors.length === 0 && $selectedOptions.length === 0) {
-            // The player correctly identified that there are no common divisors
-            points++;
-            //$messageDisplay.text("Correct! There are no common divisors between the two numbers.");
+        const hasDivisors = correctDivisors.length > 0;
+
+        if (!hasDivisors && $selectedOptions.length === 0) {
+            // Correctly identified that there are no divisors
+            points += 1;
+            // Optionally, display a success message
+            $messageDisplay.text("Correct! You found all the divisors.");
+        } else if (!hasDivisors && $selectedOptions.length > 0) {
+            // Incorrectly selected options when there are no divisors
+            $selectedOptions.each(function() {
+                $(this).addClass('incorrect');
+                points -= 2; // Wrong answers remove 2 points
+                $(this).removeClass('selected');
+            });
+            $messageDisplay.text("Incorrect! There are no divisors to select.");
         } else {
+            // When there are divisors
             $selectedOptions.each(function() {
                 const value = parseInt($(this).text());
                 if (correctDivisors.includes(value)) {
                     $(this).addClass('correct');
-                    points++;
+                    points += 1;
                     correctAnswers++;
                 } else {
                     $(this).addClass('incorrect');
@@ -250,15 +260,21 @@ $(document).ready(function() {
                 });
                 if ($option.length && !$option.hasClass('correct')) {
                     $option.addClass('missing');
-                    points--; // Missing answers remove 1 point
+                    points -= 1; // Missing answers remove 1 point
                 }
             });
+
+            if (correctAnswers === correctDivisors.length && $selectedOptions.length === correctDivisors.length) {
+                $messageDisplay.text("Great job! You've found all the divisors.");
+            } else {
+                $messageDisplay.text("Some answers were incorrect or missing.");
+            }
         }
 
-        const previousScore = score;
+        // Ensure score doesn't go below 0
         score += points;
-        score = Math.max(0, score); // Ensure score doesn't go below 0
-        updateScore(previousScore, score);
+        score = Math.max(0, score);
+        updateScore(score);
 
         $submitButton.hide();
         $nextRoundButton.show();
@@ -283,14 +299,14 @@ $(document).ready(function() {
         }
     }
 
-    function updateScore(previousScore, newScore) {
+    function updateScore(newScore) {
         $scoreDisplay.text(newScore);
         const gaugeWidth = $scoreGauge.width() - $soldier.width() - 120; // Adjusted for padding and castle width
         const positionPercentage = Math.max(0, newScore / targetScore);
         const newLeft = gaugeWidth * positionPercentage;
 
         // If score decreased, show enemy soldier attacking from the castle
-        if (newScore < previousScore) {
+        if (newScore < score) {
             // Positions relative to the score gauge
             const gaugeOffset = $scoreGauge.offset();
             const castleOffset = $castle.offset();
@@ -326,7 +342,7 @@ $(document).ready(function() {
             }, 1000);
         }, 1000);
 
-        if (newScore > previousScore) {
+        if (newScore > score) {
             // Add 10 extra seconds for each correct answer
             timeLeft += 10;
             refreshTimerDisplay(); // Update timer display immediately
@@ -341,18 +357,27 @@ $(document).ready(function() {
         $messageDisplay.text(''); // Clear any previous messages
 
         if (gameMode === 'single') {
-            $instructions.hide();
+            $instructions.text('Select all divisors of the number. If there are none, submit without selecting any options.');
+            $instructions.show();
             $number1Display.text(currentNumbers[0]);
             $number2Display.hide();
             $andText.hide();
+
+            // Render options only if there are divisors
+            if (currentOptions.length > 0) {
+                renderOptions(currentOptions);
+            } else {
+                $optionsContainer.empty(); // Ensure no options are displayed
+            }
         } else if (gameMode === 'common') {
+            $instructions.text('Select all common divisors of the numbers. If there are none, submit without selecting any options.');
             $instructions.show();
             $number1Display.text(currentNumbers[0]);
             $number2Display.text(currentNumbers[1]).show();
             $andText.show();
+            renderOptions(currentOptions);
         }
 
-        renderOptions(currentOptions);
         $submitButton.show();
         $nextRoundButton.hide();
 

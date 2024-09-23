@@ -249,3 +249,16 @@ h1 {
     font-size: 1.5rem;
 }
 
+/* Style for messages */
+.message {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Hide options container when there are no options */
+.options-container.empty {
+    display: none;
+}
+
