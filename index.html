@@ -26,12 +26,12 @@
             background-color: white;
             border-radius: 10px;
             padding: 20px;
+            box-sizing: border-box;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             position: relative;
             width: 100%;
             max-width: 800px;
             max-height: 100%;
-            box-sizing: border-box;
             overflow: auto;
         }
         .game-content {
@@ -54,6 +54,13 @@
             background-color: #fff;
             border: 2px solid #333;
             border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .speaker-icon {
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 1.5rem;
         }
         .number-display {
             font-size: 2.5rem;
@@ -199,6 +206,10 @@
                 margin: 5px;
                 padding: 3px 6px;
             }
+            .speaker-icon {
+                font-size: 1.2rem;
+                margin-left: 5px;
+            }
             .number-display {
                 font-size: 2rem;
             }
@@ -209,7 +220,7 @@
             .score {
                 font-size: 1.2rem;
             }
-            #submit, #nextRound {
+            #submit, #nextRound, #playAgain {
                 padding: 8px 12px;
                 font-size: 0.9rem;
             }
@@ -245,7 +256,9 @@
     <div class="game-container">
         <div class="game-content">
             <h1>Divisor Knight</h1>
-            <div class="timer" id="timer">2:00</div>
+            <div class="timer" id="timer">2:00
+                <span class="speaker-icon" id="speakerIcon">🔊</span>
+            </div>
             <div class="number-display" id="numberDisplay"></div>
             <div class="options-container" id="optionsContainer"></div>
             <div class="score">Score: <span id="score">10</span></div>
@@ -270,6 +283,12 @@
         </div>
     </div>
 
+    <!-- Audio Element -->
+    <audio id="backgroundMusic" loop>
+        <source src="the-virgin-medieval-music-4238.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
     <script>
         const numberDisplay = document.getElementById('numberDisplay');
         const optionsContainer = document.getElementById('optionsContainer');
@@ -283,6 +302,8 @@
         const enemySoldier = document.getElementById('enemySoldier');
         const monster = document.getElementById('monster');
         const scoreGauge = document.getElementById('scoreGauge');
+        const speakerIcon = document.getElementById('speakerIcon');
+        const backgroundMusic = document.getElementById('backgroundMusic');
 
         const initialScore = 10; // Configurable initial score
         const targetScore = 50; // Configurable target score
@@ -290,8 +311,27 @@
         let currentNumber;
         let currentOptions;
         let score = initialScore; // Start the score at initialScore points
-        let timeLeft = 120; // 3 minutes in seconds
+        let timeLeft = 120; // 2 minutes in seconds
         let maxNumber = 20; // Starting maximum number for difficulty
+
+        // Play music automatically when the game starts
+        backgroundMusic.play().catch(error => {
+            // Handle autoplay restrictions
+            console.log('Autoplay was prevented. User interaction is required to start audio.');
+        });
+
+        let isMusicPlaying = true;
+
+        speakerIcon.addEventListener('click', () => {
+            if (isMusicPlaying) {
+                backgroundMusic.pause();
+                speakerIcon.textContent = '🔇';
+            } else {
+                backgroundMusic.play();
+                speakerIcon.textContent = '🔊';
+            }
+            isMusicPlaying = !isMusicPlaying;
+        });
 
         function isPrime(num) {
             if (num <= 1) return false;
@@ -449,7 +489,7 @@
         function updateTimer() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
-            timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            timerDisplay.firstChild.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
             // Change timer color to red when less than 1 minute
             if (timeLeft <= 60) {
@@ -469,7 +509,7 @@
         function endGame(reason) {
             if (reason === 'time') {
                 celebration.style.display = 'flex';
-                celebration.querySelector('h2').textContent = 'Time\'s Up!';
+                celebration.querySelector('h2').textContent = "Time's Up!";
                 celebration.querySelector('p').textContent = `Your final score is ${score} points.`;
             } else if (reason === 'score') {
                 // Monster attacks the knight from the left
@@ -492,7 +532,7 @@
         nextRoundButton.addEventListener('click', startNewRound);
         playAgainButton.addEventListener('click', () => {
             score = initialScore; // Reset score to initialScore
-            timeLeft = 180; // Reset time
+            timeLeft = 120; // Reset time
             maxNumber = 20; // Reset maxNumber for difficulty
             scoreDisplay.textContent = score;
             soldier.style.left = '0px';
@@ -520,9 +560,6 @@
         startNewRound();
         updateTimer();
     </script>
-    <audio controls autoplay>
-      <source src="the-virgin-medieval-music-4238.mp3" type="audio/mp3">
-      Your browser does not support the audio element.
-    </audio>
 </body>
 </html>
+
