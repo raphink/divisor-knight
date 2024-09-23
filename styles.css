@@ -1,78 +1,71 @@
 /* General Styles */
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-}
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
+
 h1 {
     font-family: "Jacquarda Bastarda 9", serif;
     font-weight: 400;
     font-style: normal;
     font-size: 4rem;
 }
+
 .game-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     background-color: white;
     border-radius: 10px;
     padding: 20px;
     box-sizing: border-box;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     position: relative;
-    width: 100%;
     max-width: 800px;
-    max-height: 100%;
-    overflow: auto;
+    margin: 20px auto;
 }
+
 .game-content {
-    text-align: center;
-    width: 100%;
     position: relative;
+    width: 100%;
 }
-.level-selector {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    padding: 5px;
+
+.level-selector, .mode-selector {
+    position: relative;
     font-size: 1rem;
-    background-color: white;
-    border: 2px solid #333;
-    border-radius: 5px;
     z-index: 100;
 }
+
 .timer {
     font-size: 1.5rem;
-    position: absolute;
-    top: 10px;
-    right: 10px;
+    position: relative;
     margin: 0;
     padding: 5px 10px;
-    background-color: #fff;
-    border: 2px solid #333;
-    border-radius: 5px;
     display: flex;
     align-items: center;
 }
+
 .speaker-icon {
     margin-left: 10px;
     cursor: pointer;
     font-size: 1.5rem;
 }
+
 .number-display {
     font-size: 4rem;
     margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
+
+.instructions {
+    display: none;
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.message {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
 .options-container {
     display: flex;
     flex-wrap: wrap;
@@ -80,96 +73,55 @@ h1 {
     gap: 10px;
     margin-bottom: 20px;
 }
+
 .option {
     padding: 10px 20px;
-    background-color: #e0e0e0;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    margin: 5px;
+    min-width: 60px;
     font-size: 1rem;
 }
-.option:hover {
-    background-color: #d0d0d0;
-}
+
 .option.selected {
-    background-color: #4CAF50;
+    background-color: #28a745;
     color: white;
 }
+
 .option.correct {
-    background-color: #4CAF50;
+    background-color: #28a745 !important;
     color: white;
 }
+
 .option.incorrect {
-    background-color: #f44336;
+    background-color: #dc3545 !important;
     color: white;
 }
+
 .option.missing {
-    background-color: #FFC107;
+    background-color: #ffc107 !important;
     color: black;
 }
+
 .score {
     font-size: 1.5rem;
     margin-bottom: 20px;
 }
-#submit, #nextRound, #playAgain {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
+
+.button-group {
+    margin-bottom: 20px;
 }
-#submit:hover, #nextRound:hover, #playAgain:hover {
-    background-color: #45a049;
-}
-.celebration {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 1000;
-    padding: 20px;
-    box-sizing: border-box;
-}
-.celebration-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    max-width: 90%;
-}
-@keyframes confetti {
-    0% { transform: translateY(0) rotateX(0) rotateY(0); }
-    100% { transform: translateY(100vh) rotateX(360deg) rotateY(360deg); }
-}
-.confetti {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    background-color: #f0f0f0;
-    top: -10px;
-    z-index: 1000;
-    animation: confetti 5s ease-in-out infinite;
-}
-/* Styles for Horizontal Gauge and Characters */
+
 .score-gauge {
     position: relative;
     width: 100%;
-    height: 300px; /* Adjusted to match background image height */
+    height: 150px;
     background-image: url('path.png'); /* Replace with your background image */
     background-size: cover;
     background-position: center;
     overflow: hidden;
     margin-top: 20px;
-    border-radius: 10px; /* Optional, remove if not needed */
+    border-radius: 10px;
 }
+
 .soldier, .enemy-soldier, .deadKnight {
     position: absolute;
     bottom: 0;
@@ -179,14 +131,17 @@ h1 {
     max-width: 15%;
     z-index: 90;
 }
+
 .soldier {
     left: 0;
 }
+
 .enemy-soldier {
     display: none;
     width: 160px;
     max-width: 25%;
 }
+
 .deadKnight {
     display: none;
     bottom: -25px;
@@ -195,6 +150,7 @@ h1 {
     max-width: 20%;
     transition: left 1s;
 }
+
 .castle {
     position: absolute;
     bottom: -50px;
@@ -203,6 +159,37 @@ h1 {
     height: auto;
     max-width: 30%;
 }
+
+@keyframes confetti {
+    0% { transform: translateY(0) rotateX(0) rotateY(0); }
+    100% { transform: translateY(100vh) rotateX(360deg) rotateY(360deg); }
+}
+
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background-color: #f0f0f0;
+    top: -10px;
+    z-index: 1000;
+    animation: confetti 5s ease-in-out infinite;
+}
+
+/* Custom Modal Styles */
+.modal-content.celebration-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.modal-content .modal-title {
+    font-size: 2rem;
+}
+
+.modal-content .modal-body p {
+    font-size: 1.2rem;
+}
+
 /* Responsive Styles */
 @media (max-width: 600px) {
     h1 {
@@ -227,13 +214,6 @@ h1 {
     .score {
         font-size: 1.2rem;
     }
-    #submit, #nextRound, #playAgain {
-        padding: 8px 12px;
-        font-size: 0.9rem;
-    }
-    .score-gauge {
-        height: 80px;
-    }
     .soldier, .enemy-soldier, .deadKnight {
         width: 60px;
         max-width: 20%;
@@ -242,11 +222,12 @@ h1 {
         width: 80px;
         max-width: 20%;
     }
-    .level-selector {
+    .level-selector, .mode-selector {
         font-size: 0.9rem;
         padding: 3px;
     }
 }
+
 /* Landscape Orientation */
 @media only screen and (orientation: landscape) {
     .game-container {
@@ -260,29 +241,4 @@ h1 {
     body {
         align-items: stretch;
     }
-}
-
-.mode-selector {
-    position: absolute;
-    top: 10px;
-    left: 150px; /* Adjust this value to position it next to the level selector */
-    padding: 5px;
-    font-size: 1rem;
-    background-color: white;
-    border: 2px solid #333;
-    border-radius: 5px;
-    z-index: 100;
-}
-
-.message {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.instructions {
-    display: none;
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 10px;
 }

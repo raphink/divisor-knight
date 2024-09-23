@@ -5,86 +5,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Divisor Knight</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Fonts and styles -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jacquarda+Bastarda+9&display=swap" rel="stylesheet">
-    <!-- Link to external CSS file -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="game-container">
-        <!-- Mode Selector -->
-        <select class="mode-selector" id="modeSelector">
-            <option value="single" selected>Single Number Mode</option>
-            <option value="common">Common Divisors Mode</option>
-        </select>
+    <div class="container-fluid">
+        <!-- Game Container -->
+        <div class="game-container">
 
-        <!-- Level Selector -->
-        <select class="level-selector" id="levelSelector">
-            <option value="easy">Easy</option>
-            <option value="medium" selected>Medium</option>
-            <option value="hard">Hard</option>
-        </select>
-
-        <div class="game-content">
-            <h1>Divisor Knight</h1>
-            <div class="timer" id="timer">1:00
-                <span class="speaker-icon" id="speakerIcon">🔊</span>
+            <!-- Mode and Level Selectors -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <!-- Level Selector -->
+                <select class="form-control w-auto" id="levelSelector">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+                <!-- Game Title -->
+                <h1 class="mx-auto">Divisor Knight</h1>
+                <!-- Mode Selector -->
+                <select class="form-control w-auto" id="modeSelector">
+                    <option value="single" selected>Single Number Mode</option>
+                    <option value="common">Common Divisors Mode</option>
+                </select>
             </div>
-            <div class="number-display" id="numberDisplay">
-                <span id="number1Display"></span>
-                <span id="andText" style="display: none;">&nbsp;and&nbsp;</span>
-                <span id="number2Display"></span>
+
+            <!-- Timer and Speaker Icon -->
+            <div class="d-flex justify-content-end mb-2">
+                <div class="timer border rounded px-3 py-2">
+                    <span id="timer">1:00</span>
+                    <span class="speaker-icon ml-2" id="speakerIcon">🔊</span>
+                </div>
             </div>
-            <p class="instructions" id="instructions">
-                Select all common divisors of the numbers. If there are none, submit without selecting any options.
-            </p>
-            <div class="message" id="messageDisplay"></div>
-            <div class="options-container" id="optionsContainer"></div>
-            <div class="score">Score: <span id="score">10</span></div>
-            <button id="submit">Submit</button>
-            <button id="nextRound" style="display: none;">Next Round</button>
+
+            <!-- Game Content -->
+            <div class="game-content text-center">
+
+                <!-- Number Display -->
+                <div class="number-display mb-3" id="numberDisplay">
+                    <span id="number1Display"></span>
+                    <span id="andText" style="display: none;">&nbsp;and&nbsp;</span>
+                    <span id="number2Display"></span>
+                </div>
+
+                <!-- Instructions -->
+                <p class="instructions" id="instructions">
+                    Select all common divisors of the numbers. If there are none, submit without selecting any options.
+                </p>
+
+                <!-- Message Display -->
+                <div class="message" id="messageDisplay"></div>
+
+                <!-- Options Container -->
+                <div class="options-container mb-3" id="optionsContainer"></div>
+
+                <!-- Score Display -->
+                <div class="score mb-3">Score: <span id="score">10</span></div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button class="btn btn-success" id="submit">Submit</button>
+                    <button class="btn btn-primary" id="nextRound" style="display: none;">Next Round</button>
+                </div>
+
+            </div>
+
+            <!-- Score Gauge -->
+            <div class="score-gauge position-relative mt-4" id="scoreGauge">
+                <!-- Knight and Enemy -->
+                <img src="https://cdnb.artstation.com/p/assets/images/images/046/439/899/original/jens-steenmetz-swordsman-idle.gif?1645115580" alt="Knight" class="soldier" id="soldier">
+                <img src="https://i.pinimg.com/originals/20/a4/fa/20a4fa9b235aa28f73caa31805289b83.gif" alt="Enemy" class="enemy-soldier" id="enemySoldier">
+                <!-- Dead Knight for Game Over -->
+                <img src="dead-knight.png" alt="Dead Knight" class="deadKnight" id="deadKnight">
+                <!-- Castle at the end -->
+                <img src="castle.png" alt="Castle" class="castle" id="castle">
+            </div>
         </div>
-        <div class="score-gauge" id="scoreGauge">
-            <!-- Knight and Enemy -->
-            <img src="https://cdnb.artstation.com/p/assets/images/images/046/439/899/original/jens-steenmetz-swordsman-idle.gif?1645115580" alt="Knight" class="soldier" id="soldier">
-            <img src="https://i.pinimg.com/originals/20/a4/fa/20a4fa9b235aa28f73caa31805289b83.gif" alt="Enemy" class="enemy-soldier" id="enemySoldier">
-            <!-- Dead Knight for Game Over -->
-            <img src="dead-knight.png" alt="Dead Knight" class="deadKnight" id="deadKnight">
-            <!-- Castle at the end -->
-            <img src="castle.png" alt="Castle" class="castle" id="castle">
+
+        <!-- Celebration Modal -->
+        <div class="modal fade" id="celebration" tabindex="-1" aria-labelledby="celebrationLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content celebration-content text-center">
+                    <div class="modal-header">
+                        <h2 class="modal-title" id="celebrationLabel">Game Over!</h2>
+                    </div>
+                    <div class="modal-body">
+                        <p></p>
+                        <button class="btn btn-success" id="playAgain">Play Again</button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="celebration" id="celebration">
-        <div class="celebration-content">
-            <h2>Game Over!</h2>
-            <p></p>
-            <button id="playAgain">Play Again</button>
-        </div>
+
+        <!-- Audio Elements -->
+        <audio id="backgroundMusic" loop>
+            <source src="the-virgin-medieval-music-4238.mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <audio id="walkSound">
+            <source src="footsteps-running-away-fading-2-103763.mp3" type="audio/mp3">
+        </audio>
+        <audio id="victorySound">
+            <source src="medieval-fanfare-6826.mp3" type="audio/mp3">
+        </audio>
+        <audio id="defeatSound">
+            <source src="dead-8bit-41400.mp3" type="audio/mp3">
+        </audio>
+        <audio id="magicAttackSound">
+            <source src="magic-spell-shoot-sound-effect-full-pack-link-in-comments-236816.mp3" type="audio/mp3">
+        </audio>
+        <audio id="noTimeSound">
+            <source src="horse-123780.mp3" type="audio/mp3">
+        </audio>
+
     </div>
 
-    <!-- Audio Elements -->
-    <audio id="backgroundMusic" loop>
-        <source src="the-virgin-medieval-music-4238.mp3" type="audio/mp3">
-        Your browser does not support the audio element.
-    </audio>
-    <audio id="walkSound">
-        <source src="footsteps-running-away-fading-2-103763.mp3" type="audio/mp3">
-    </audio>
-    <audio id="victorySound">
-        <source src="medieval-fanfare-6826.mp3" type="audio/mp3">
-    </audio>
-    <audio id="defeatSound">
-        <source src="dead-8bit-41400.mp3" type="audio/mp3">
-    </audio>
-    <audio id="magicAttackSound">
-        <source src="magic-spell-shoot-sound-effect-full-pack-link-in-comments-236816.mp3" type="audio/mp3">
-    </audio>
-    <audio id="noTimeSound">
-        <source src="horse-123780.mp3" type="audio/mp3">
-    </audio>
-    <!-- Link to external JavaScript file -->
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
     <script src="script.js"></script>
 </body>
 </html>
