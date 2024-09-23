@@ -267,7 +267,7 @@ $(document).ready(function() {
             setTimeout(() => {
                 $soldier.hide();
                 victorySound.play();
-                $celebration.find('h2').text('Congratulations!');
+                $celebration.find('h2').text('🎉 Congratulations!');
                 $celebration.find('p').text(`You've reached the target score!`);
                 $celebration.modal();
                 throwParty();
@@ -423,7 +423,7 @@ $(document).ready(function() {
             // Hide the knight to simulate defeat
             $soldier.hide();
 
-            $celebration.find('h2').text("Time's Up!");
+            $celebration.find('h2').text("⌛ Time's Up!");
             $celebration.find('p').text(`Your final score is ${score} points.`);
             $celebration.modal();
         } else if (reason === 'score') {
