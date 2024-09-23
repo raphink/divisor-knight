@@ -20,28 +20,30 @@
 
             <!-- Mode and Level Selectors -->
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <!-- Level Selector -->
-                <select class="form-control w-auto" id="levelSelector">
-                    <option value="easy">Easy</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="hard">Hard</option>
-                </select>
-                <!-- Game Title -->
-                <h1 class="mx-auto">Divisor Knight</h1>
-                <!-- Mode Selector -->
-                <select class="form-control w-auto" id="modeSelector">
-                    <option value="single" selected>Single Number Mode</option>
-                    <option value="common">Common Divisors Mode</option>
-                </select>
-            </div>
+                <div class="d-flex align-items-center">
+                    <!-- Level Selector -->
+                    <select class="form-control w-auto mr-2" id="levelSelector">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                    <!-- Mode Selector -->
+                    <select class="form-control w-auto" id="modeSelector">
+                        <option value="single" selected>Single Number Mode</option>
+                        <option value="common">Common Divisors Mode</option>
+                    </select>
+                </div>
 
-            <!-- Timer and Speaker Icon -->
-            <div class="d-flex justify-content-end mb-2">
+                <!-- Timer and Speaker Icon -->
                 <div class="timer border rounded px-3 py-2">
                     <span id="timer">1:00</span>
                     <span class="speaker-icon ml-2" id="speakerIcon">🔊</span>
                 </div>
             </div>
+
+
+            <!-- Game Title -->
+            <h1 class="text-center flex-grow-1">Divisor Knight</h1>
 
             <!-- Game Content -->
             <div class="game-content text-center">
