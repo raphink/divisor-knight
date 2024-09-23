@@ -163,7 +163,7 @@
             margin-top: 20px;
             border-radius: 10px; /* Optional, remove if not needed */
         }
-        .soldier, .enemy-soldier, .monster {
+        .soldier, .enemy-soldier, .deadKnight {
             position: absolute;
             bottom: 0;
             width: 80px;
@@ -180,7 +180,7 @@
             width: 160px;
             max-width: 25%;
         }
-        .monster {
+        .deadKnight {
             display: none;
             bottom: -25px;
             width: 90px;
@@ -227,7 +227,7 @@
             .score-gauge {
                 height: 80px;
             }
-            .soldier, .enemy-soldier, .monster {
+            .soldier, .enemy-soldier, .deadKnight {
                 width: 60px;
                 max-width: 20%;
             }
@@ -270,7 +270,7 @@
             <img src="https://cdnb.artstation.com/p/assets/images/images/046/439/899/original/jens-steenmetz-swordsman-idle.gif?1645115580" alt="Knight" class="soldier" id="soldier">
             <img src="https://i.pinimg.com/originals/20/a4/fa/20a4fa9b235aa28f73caa31805289b83.gif" alt="Enemy" class="enemy-soldier" id="enemySoldier">
             <!-- Monster for Game Over -->
-            <img src="dead-knight.png" alt="Monster" class="monster" id="monster">
+            <img src="dead-knight.png" alt="Monster" class="deadKnight" id="deadKnight">
             <!-- Castle at the end -->
             <img src="castle.png" alt="Castle" class="castle" id="castle">
         </div>
@@ -312,7 +312,7 @@
         const timerDisplay = document.getElementById('timer');
         const soldier = document.getElementById('soldier');
         const enemySoldier = document.getElementById('enemySoldier');
-        const monster = document.getElementById('monster');
+        const deadKnight = document.getElementById('deadKnight');
         const scoreGauge = document.getElementById('scoreGauge');
         const speakerIcon = document.getElementById('speakerIcon');
         const backgroundMusic = document.getElementById('backgroundMusic');
@@ -327,7 +327,7 @@
         let currentNumber;
         let currentOptions;
         let score = initialScore; // Start the score at initialScore points
-        let timeLeft = 120; // 2 minutes in seconds
+        let timeLeft = 10; // 2 minutes in seconds
         let maxNumber = 20; // Starting maximum number for difficulty
 
         // Play music automatically when the game starts
@@ -532,13 +532,20 @@
 
         function endGame(reason) {
             if (reason === 'time') {
+                // You died
+                deadKnight.style.display = 'block';
+                deadKnight.style.left = soldier.style.left;
+
+                // Hide the knight to simulate defeat
+                soldier.style.display = 'none';
+                
                 celebration.style.display = 'flex';
                 celebration.querySelector('h2').textContent = "Time's Up!";
                 celebration.querySelector('p').textContent = `Your final score is ${score} points.`;
             } else if (reason === 'score') {
-                // Monster attacks the knight from the left
-                monster.style.display = 'block';
-                monster.style.left = '0px';
+                // You died
+                deadKnight.style.display = 'block';
+                deadKnight.style.left = '0px';
 
                 // Hide the knight to simulate defeat
                 soldier.style.display = 'none';
@@ -549,7 +556,7 @@
                 setTimeout(() => {
                     celebration.style.display = 'flex';
                     celebration.querySelector('h2').textContent = 'Game Over!';
-                    celebration.querySelector('p').textContent = `A monster has defeated you!`;
+                    celebration.querySelector('p').textContent = `You died!`;
                 }, 2000);
             }
         }
@@ -564,7 +571,7 @@
             soldier.style.left = '0px';
             timerDisplay.style.color = 'black';
             celebration.style.display = 'none';
-            monster.style.display = 'none';
+            deadKnight.style.display = 'none';
             soldier.style.display = 'block'; // Show knight again
             placeSoldierAtStart();
             startNewRound();
