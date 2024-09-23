@@ -98,7 +98,7 @@
             font-size: 1.5rem;
             margin-bottom: 20px;
         }
-        #submit, #nextRound {
+        #submit, #nextRound, #playAgain {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
@@ -107,7 +107,7 @@
             cursor: pointer;
             font-size: 1rem;
         }
-        #submit:hover, #nextRound:hover {
+        #submit:hover, #nextRound:hover, #playAgain:hover {
             background-color: #45a049;
         }
         .celebration {
@@ -163,6 +163,7 @@
             height: auto;
             transition: left 0.5s;
             max-width: 15%;
+            z-index: 90;
         }
         .soldier {
             left: 0;
@@ -383,10 +384,12 @@
             nextRoundButton.style.display = 'inline-block';
 
             if (score >= targetScore) {
-                celebration.querySelector('h2').textContent = 'Congratulations!';
-                celebration.querySelector('p').textContent = `You've reached the target score!`;
-                celebration.style.display = 'flex';
-                throwParty();
+                setTimeout(() => {
+                    celebration.querySelector('h2').textContent = 'Congratulations!';
+                    celebration.querySelector('p').textContent = `You've reached the target score!`;
+                    celebration.style.display = 'flex';
+                    throwParty();
+                }, 1000);
             } else if (score <= 0) {
                 endGame('score');
             }
