@@ -148,21 +148,14 @@
         .score-gauge {
             position: relative;
             width: 100%;
-            max-width: 600px;
-            height: 100px;
-            background-color: #e0e0e0;
-            border-radius: 50px;
+            max-width: 800px; /* Adjusted to match background image width */
+            height: 200px; /* Adjusted to match background image height */
+            background-image: url('path.png'); /* Replace with your background image */
+            background-size: cover;
+            background-position: center;
             overflow: hidden;
             margin-top: 20px;
-        }
-        .gauge-track {
-            position: absolute;
-            top: 50%;
-            left: 5%;
-            width: 90%;
-            height: 10px;
-            background-color: #ccc;
-            transform: translateY(-50%);
+            border-radius: 10px; /* Optional, remove if not needed */
         }
         .soldier, .enemy-soldier, .monster {
             position: absolute;
@@ -182,6 +175,7 @@
         }
         .monster {
             display: none;
+            bottom: -25px;
             width: 110px;
             left: -80px;
             max-width: 20%;
@@ -230,10 +224,6 @@
                 width: 80px;
                 max-width: 20%;
             }
-            .gauge-track {
-                left: 5%;
-                width: 90%;
-            }
         }
         /* Landscape Orientation */
         @media only screen and (orientation: landscape) {
@@ -263,7 +253,6 @@
             <button id="nextRound" style="display: none;">Next Round</button>
         </div>
         <div class="score-gauge" id="scoreGauge">
-            <div class="gauge-track"></div>
             <!-- Knight and Enemy -->
             <img src="https://cdnb.artstation.com/p/assets/images/images/046/439/899/original/jens-steenmetz-swordsman-idle.gif?1645115580" alt="Knight" class="soldier" id="soldier">
             <img src="https://i.pinimg.com/originals/20/a4/fa/20a4fa9b235aa28f73caa31805289b83.gif" alt="Enemy" class="enemy-soldier" id="enemySoldier">
