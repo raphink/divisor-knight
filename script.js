@@ -396,8 +396,10 @@ $(document).ready(function() {
             // Render options only if there are divisors
             if (currentOptions.length > 0) {
                 renderOptions(currentOptions);
+                $optionsContainer.removeClass('empty');
             } else {
                 $optionsContainer.empty(); // Ensure no options are displayed
+                $optionsContainer.addClass('empty'); // Hide or style accordingly
             }
         } else if (gameMode === 'common') {
             $instructions.text('Select all common divisors of the numbers. If there are none, submit without selecting any options.');
