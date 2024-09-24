@@ -132,39 +132,31 @@ body {
 .soldier, .red-soldier, .enemy-soldier, .deadKnight {
     position: absolute;
     bottom: 0;
-    width: 80px;
-    height: auto;
+    height: 30%;
+    width: auto;
     transition: left 1s;
-    max-width: 15%;
     z-index: 90;
-}
-
-.soldier, .red-soldier {
-    left: 0;
 }
 
 .enemy-soldier {
     display: none;
-    width: 160px;
-    max-width: 25%;
+    height: 60%;
 }
 
 .deadKnight {
     display: none;
     bottom: -25px;
-    width: 90px;
-    left: -80px;
-    max-width: 20%;
+    height: 26%;
+    left: -10%;
     transition: left 1s;
 }
 
 .castle {
     position: absolute;
     bottom: -50px;
-    right: -40px;
-    width: 500px;
-    height: auto;
-    max-width: 30%;
+    right: -5%;
+    height: 150%; /* Adjusted for responsiveness */
+    width: auto;
 }
 
 /* Updated Confetti Styles */
