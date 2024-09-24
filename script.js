@@ -38,29 +38,30 @@ $(document).ready(function() {
     const targetScore = 50; // Configurable target score
 
     let score = initialScore; // Start the score at initialScore points
-    let timeLeft = 60; // 1 minute in seconds for medium
+    let initTimeLeft = 60; // 1 minute in seconds for medium
     let minNumber = 20; // Starting minimum number for difficulty
     let maxNumber = 30; // Starting maximum number for difficulty
     let maxMaxNumber = 150; // Default maxMaxNumber for medium level
     let addNumber = 20; // Default addNumber for medium level
 
+    let timeLeft = initTimeLeft;
     let timerInterval; // Variable to store the timer interval
 
     // Function to update maxMaxNumber and minNumber based on selected level
     const updateLevel = () => {
         const selectedLevel = $levelSelector.val();
         if (selectedLevel === 'easy') {
-            timeLeft = 120;
+            initTimeLeft = 120;
             minNumber = 4;
             maxMaxNumber = 100;
             addNumber = 10;
         } else if (selectedLevel === 'medium') {
-            timeLeft = 60;
+            initTimeLeft = 60;
             minNumber = 20;
             maxMaxNumber = 150;
             addNumber = 20;
         } else if (selectedLevel === 'hard') {
-            timeLeft = 30;
+            initTimeLeft = 30;
             minNumber = 30;
             maxMaxNumber = 200;
             addNumber = 30;
@@ -502,7 +503,7 @@ $(document).ready(function() {
     function resetGame() {
         clearInterval(timerInterval); // Clear any existing timer
         score = initialScore; // Reset score to initialScore
-        timeLeft = 60; // Reset time
+        timeLeft = initTimeLeft; // Reset time
         maxNumber = minNumber + 10; // Reset maxNumber based on minNumber
         $scoreDisplay.text(score);
         $soldier.css('left', '0px');
