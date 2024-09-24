@@ -335,7 +335,7 @@ $(document).ready(function() {
             const soldierOffset = $soldier.offset();
 
             // Set the red knight's position to the right of the soldier
-            const redSoldierOffset = soldierOffset.left - gaugeOffset.left + $soldier.width();
+            const redSoldierOffset = soldierOffset.left - gaugeOffset.left + $soldier.width() - 50;
             $redSoldier.css('left', `${redSoldierOffset}px`);
 
             // Calculate the starting position (castle) and ending position (knight) for the enemy soldier
@@ -367,7 +367,7 @@ $(document).ready(function() {
             $soldier.css('left', `${newLeft}px`);
 
             $redSoldier.attr('src', $redSoldierRunning);
-            $redSoldier.css('left', `${newLeft + $soldier.width()}px`);
+            $redSoldier.css('left', `${newLeft + $soldier.width() - 50}px`);
 
             setTimeout(() => {
                  $soldier.attr('src', $soldierIdle);
@@ -545,7 +545,7 @@ $(document).ready(function() {
         const positionPercentage = Math.max(0, score / targetScore);
         const initialLeft = gaugeWidth * positionPercentage;
         $soldier.css('left', `${initialLeft}px`);
-        $redSoldier.css('left', `${initialLeft + $soldier.width() - 20}px`);
+        $redSoldier.css('left', `${initialLeft + $soldier.width() - 50}px`);
     }
 
     placeSoldierAtStart();
