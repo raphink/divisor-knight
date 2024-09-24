@@ -38,7 +38,7 @@ $(document).ready(function() {
     const targetScore = 50; // Configurable target score
 
     let score = initialScore; // Start the score at initialScore points
-    let timeLeft = 60; // 1 minute in seconds
+    let timeLeft = 60; // 1 minute in seconds for medium
     let minNumber = 20; // Starting minimum number for difficulty
     let maxNumber = 30; // Starting maximum number for difficulty
     let maxMaxNumber = 150; // Default maxMaxNumber for medium level
@@ -50,14 +50,17 @@ $(document).ready(function() {
     const updateLevel = () => {
         const selectedLevel = $levelSelector.val();
         if (selectedLevel === 'easy') {
+            timeLeft = 120;
             minNumber = 4;
             maxMaxNumber = 100;
             addNumber = 10;
         } else if (selectedLevel === 'medium') {
+            timeLeft = 60;
             minNumber = 20;
             maxMaxNumber = 150;
             addNumber = 20;
         } else if (selectedLevel === 'hard') {
+            timeLeft = 30;
             minNumber = 30;
             maxMaxNumber = 200;
             addNumber = 30;
