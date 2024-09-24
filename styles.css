@@ -160,6 +160,7 @@ body {
 }
 
 /* Updated Confetti Styles */
+/* Corrected Confetti Styles */
 .confetti {
     position: fixed;
     width: 10px;
@@ -167,7 +168,14 @@ body {
     background-color: #f0f0f0;
     top: -10px;
     z-index: 1000;
-    animation: confetti 5s ease-in-out infinite;
+    animation: confettiFall 5s ease-in-out infinite; /* Corrected animation name */
+}
+
+@keyframes confettiFall {
+    to {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
 }
 
 /* Custom Modal Styles */
