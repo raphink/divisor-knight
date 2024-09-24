@@ -13,6 +13,9 @@ $(document).ready(function() {
         $soldier = $('#soldier'),
         $soldierIdle = 'blue_knight.gif',
         $soldierRunning = 'blue_knight-running.gif',
+        $redSoldier = $('#redSoldier'),
+        $redSoldierIdle = 'red_knight_flipped.gif',
+        $redSoldierRunning = 'red_knight-running_flipped.gif',
         $enemySoldier = $('#enemySoldier'),
         $deadKnight = $('#deadKnight'),
         $scoreGauge = $('#scoreGauge'),
@@ -297,8 +300,10 @@ $(document).ready(function() {
         $feedbackModal.show();
 
         if (score >= targetScore) {
+            $deadKnight.css('left', $redSoldier.css('left')).show();
+            $redSoldier.hide();
+            $soldier.hide();
             setTimeout(() => {
-                $soldier.hide();
                 victorySound.play();
                 $celebration.find('h2').text('🎉 Congratulations!');
                 $celebration.find('p').text(`You've reached the target score!`);
@@ -329,6 +334,10 @@ $(document).ready(function() {
             const castleOffset = $castle.offset();
             const soldierOffset = $soldier.offset();
 
+            // Set the red knight's position to the right of the soldier
+            const redSoldierOffset = soldierOffset.left - gaugeOffset.left + $soldier.width();
+            $redSoldier.css('left', `${redSoldierOffset}px`);
+
             // Calculate the starting position (castle) and ending position (knight) for the enemy soldier
             const enemyStartLeft = castleOffset.left - gaugeOffset.left;
             const enemyEndLeft = soldierOffset.left - gaugeOffset.left + $soldier.width();
@@ -357,8 +366,12 @@ $(document).ready(function() {
             $soldier.attr('src', $soldierRunning);
             $soldier.css('left', `${newLeft}px`);
 
+            $redSoldier.attr('src', $redSoldierRunning);
+            $redSoldier.css('left', `${newLeft + $soldier.width()}px`);
+
             setTimeout(() => {
                  $soldier.attr('src', $soldierIdle);
+                 $redSoldier.attr('src', $redSoldierIdle);
             }, 1000);
         }, 1000);
 
@@ -511,6 +524,7 @@ $(document).ready(function() {
         maxNumber = minNumber + 10; // Reset maxNumber based on minNumber
         $scoreDisplay.text(score);
         $soldier.css('left', '0px');
+        $redSoldier.css('left', `${$soldier.width()}px`).show();
         $timerDisplay.css('color', 'black');
         $celebration.hide();
         $deadKnight.hide();
@@ -531,6 +545,7 @@ $(document).ready(function() {
         const positionPercentage = Math.max(0, score / targetScore);
         const initialLeft = gaugeWidth * positionPercentage;
         $soldier.css('left', `${initialLeft}px`);
+        $redSoldier.css('left', `${initialLeft + $soldier.width() - 20}px`);
     }
 
     placeSoldierAtStart();
