@@ -430,8 +430,10 @@ $(document).ready(function() {
                 noTimeSoundPlayed = true;
             }
             $timerDisplay.css('color', 'red');
+            backgroundMusic.playbackRate = 2;
         } else {
             $timerDisplay.css('color', 'black');
+            backgroundMusic.playbackRate = 1;
             noTimeSoundPlayed = false; // Reset the flag if time increases
         }
     }
@@ -455,6 +457,8 @@ $(document).ready(function() {
     let noTimeSoundPlayed = false;
 
     function endGame(reason) {
+        backgroundMusic.pause();
+
         clearInterval(timerInterval); // Stop the timer
         if (reason === 'time') {
             // You died
@@ -514,6 +518,8 @@ $(document).ready(function() {
         placeSoldierAtStart();
         startNewRound();
         startTimer(); // Restart the timer
+        backgroundMusic.playbackRate = 1;
+        backgroundMusic.play();
     }
 
     // Set initial score display
