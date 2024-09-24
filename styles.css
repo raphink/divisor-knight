@@ -194,8 +194,9 @@ body {
 }
 
 /* Responsive Styles */
+/* Responsive Styles */
 @media (max-width: 600px) {
-    h1 {
+    .game-title {
         font-size: 2rem;
     }
     .timer {
@@ -217,7 +218,7 @@ body {
     .score {
         font-size: 1.2rem;
     }
-    .soldier, .enemy-soldier, .deadKnight {
+    .soldier, .red-soldier, .enemy-soldier {
         width: 60px;
         max-width: 20%;
     }
