@@ -44,6 +44,9 @@
                         <span id="timer">1:00</span>
                         <button class="btn btn-link p-0 ms-2" id="speakerIcon" aria-label="Toggle Sound">🔊</button>
                     </div>
+
+                    <!-- Credits Button -->
+                    <button class="btn btn-secondary ms-3" id="creditsButton" aria-label="View Credits" data-bs-toggle="modal" data-bs-target="#creditsModal">Credits</button>
                 </div>
             </div>
 
@@ -122,6 +125,58 @@
             </div>
         </div>
 
+        <!-- Credits Modal -->
+        <div class="modal fade" id="creditsModal" tabindex="-1" aria-labelledby="creditsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="creditsModalLabel">Credits</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <strong>Knight Image:</strong> 
+                                <a href="https://jenssteenmetz.artstation.com/projects/14XNNo?album_id=5490318" target="_blank" rel="noopener noreferrer">Jens Steenmetz</a>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Background and Castle:</strong> 
+                                Generated using <a href="https://www.midjourney.com/" target="_blank" rel="noopener noreferrer">MidJourney</a>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Background Music:</strong> 
+                                <a href="https://pixabay.com/music/folk-the-virgin-medieval-music-4238/" target="_blank" rel="noopener noreferrer">The Virgin - Medieval Music</a> by Pixabay
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Magic Spell Effect:</strong> 
+                                <a href="https://pixabay.com/sound-effects/magic-spell-shoot-sound-effect-full-pack-link-in-comments-236816/" target="_blank" rel="noopener noreferrer">Magic Spell Shoot Sound Effect</a> by Pixabay
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Walking Sound:</strong> 
+                                <a href="https://pixabay.com/sound-effects/footsteps-running-away-fading-2-103763/" target="_blank" rel="noopener noreferrer">Footsteps Running Away Fading</a> by Pixabay
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Horse Sound:</strong> 
+                                <a href="https://pixabay.com/sound-effects/horse-123780/" target="_blank" rel="noopener noreferrer">Horse Sound</a> by Pixabay
+                            </li>
+                            <!-- New Credits Added Below -->
+                            <li class="list-group-item">
+                                <strong>Dead Sound:</strong> 
+                                <a href="https://pixabay.com/sound-effects/dead-8bit-41400/" target="_blank" rel="noopener noreferrer">Dead 8bit Sound</a> by Pixabay
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Final Fanfare (Winning Sound):</strong> 
+                                <a href="https://pixabay.com/sound-effects/medieval-fanfare-6826/" target="_blank" rel="noopener noreferrer">Medieval Fanfare</a> by Pixabay
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Audio Elements -->
         <audio id="backgroundMusic" loop>
             <source src="the-virgin-medieval-music-4238.mp3" type="audio/mp3">
@@ -153,4 +208,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-

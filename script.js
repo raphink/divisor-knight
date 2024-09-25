@@ -103,6 +103,11 @@ $(document).ready(function() {
         isMusicPlaying = !isMusicPlaying;
     });
 
+    // Trigger Credits Modal on Credits Button Click
+$('#creditsButton').on('click', function() {
+    $('#creditsModal').modal('show');
+});
+
     function isPrime(num) {
         if (num <= 1) return false;
         if (num <= 3) return true;

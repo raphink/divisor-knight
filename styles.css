@@ -282,3 +282,50 @@ body {
     font-size: 1rem;
 }
 
+
+/* Custom Modal Styles */
+.modal-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    font-family: Arial, sans-serif; /* Ensure readability */
+}
+
+.modal-title {
+    font-family: "Jacquarda Bastarda 9", serif;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.modal-body ul {
+    list-style-type: none; /* Remove default list styling */
+    padding: 0;
+}
+
+.modal-body li {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.modal-body a {
+    color: #0d6efd; /* Bootstrap's primary color */
+    text-decoration: none;
+}
+
+.modal-body a:hover {
+    text-decoration: underline;
+}
+
+.modal-footer {
+    justify-content: center; /* Center the Close button */
+}
+
+/* Optional: Style the Credits Button */
+#creditsButton {
+    font-size: 1rem;
+}
+
+/* Ensure Confetti doesn't interfere with modals */
+.confetti {
+    pointer-events: none; /* Allows clicks to pass through */
+}
