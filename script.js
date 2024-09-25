@@ -309,6 +309,7 @@ $('#creditsButton').on('click', function() {
             $redSoldier.hide();
             $soldier.hide();
             setTimeout(() => {
+                backgroundMusic.pause();
                 victorySound.play();
                 $celebration.find('h2').text('🎉 Congratulations!');
                 $celebration.find('p').text(`You've reached the target score!`);
