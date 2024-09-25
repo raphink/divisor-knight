@@ -16,15 +16,13 @@ $(document).ready(function() {
         $redSoldier = $('#redSoldier'),
         $redSoldierIdle = 'red_knight_flipped.gif',
         $redSoldierRunning = 'red_knight-running_flipped.gif',
-        $enemySoldier = $('#enemySoldier'),
         $deadKnight = $('#deadKnight'),
         $scoreGauge = $('#scoreGauge'),
         $speakerIcon = $('#speakerIcon'),
         backgroundMusic = document.getElementById('backgroundMusic'),
-        walkSound = document.getElementById('walkSound'),
         victorySound = document.getElementById('victorySound'),
         defeatSound = document.getElementById('defeatSound'),
-        magicAttackSound = document.getElementById('magicAttackSound'),
+        attackSound = document.getElementById('attackSound'),
         noTimeSound = document.getElementById('noTimeSound'),
         $levelSelector = $('#levelSelector'),
         $castle = $('#castle'),
@@ -333,39 +331,7 @@ $(document).ready(function() {
         const positionPercentage = Math.max(0, newScore / targetScore);
         const newLeft = gaugeWidth * positionPercentage;
 
-        // If score decreased, show enemy soldier attacking from the castle
-        if (newScore < oldScore) {
-            // Positions relative to the score gauge
-            const gaugeOffset = $scoreGauge.offset();
-            const castleOffset = $castle.offset();
-            const soldierOffset = $soldier.offset();
-
-            // Set the red knight's position to the right of the soldier
-            const redSoldierOffset = soldierOffset.left - gaugeOffset.left + $soldier.width() - 50;
-            $redSoldier.css('left', `${redSoldierOffset}px`);
-
-            // Calculate the starting position (castle) and ending position (knight) for the enemy soldier
-            const enemyStartLeft = castleOffset.left - gaugeOffset.left;
-            const enemyEndLeft = soldierOffset.left - gaugeOffset.left + $soldier.width();
-
-            // Set the enemy soldier's starting position at the castle
-            $enemySoldier.css('left', `${enemyStartLeft}px`).show();
-
-            // Force reflow to ensure the starting position is applied before the transition
-            $enemySoldier[0].offsetWidth;
-
-            // Animate the enemy soldier moving towards the knight
-            $enemySoldier.css('left', `${enemyEndLeft}px`);
-            magicAttackSound.play();
-
-            // Hide the enemy soldier after the animation
-            setTimeout(() => {
-                $enemySoldier.css('left', `${enemyStartLeft}px`).show();
-                setTimeout(() => {
-                    $enemySoldier.hide();
-                }, 1000); // Duration should match the transition time
-            }, 2000); // Duration should match the transition time
-        }
+        attackSound.play();
 
         // Move the soldier to the new position
         setTimeout(() => {
@@ -373,19 +339,13 @@ $(document).ready(function() {
             $soldier.css('left', `${newLeft}px`);
 
             $redSoldier.attr('src', $redSoldierRunning);
-            $redSoldier.css('left', `${newLeft + $soldier.width() - 50}px`);
+            $redSoldier.css('left', `${newLeft + $soldier.width() - 70}px`);
 
             setTimeout(() => {
                  $soldier.attr('src', $soldierIdle);
                  $redSoldier.attr('src', $redSoldierIdle);
             }, 1000);
         }, 1000);
-
-        if (newScore > oldScore) {
-            // Extra seconds already handled in checkAnswer
-            // Just play the walk sound
-            walkSound.play();
-        }
     }
 
     function startNewRound() {
@@ -553,7 +513,7 @@ $(document).ready(function() {
         const positionPercentage = Math.max(0, score / targetScore);
         const initialLeft = gaugeWidth * positionPercentage;
         $soldier.css('left', `${initialLeft}px`);
-        $redSoldier.css('left', `${initialLeft + $soldier.width() - 50}px`);
+        $redSoldier.css('left', `${initialLeft + $soldier.width() - 70}px`);
     }
 
     placeSoldierAtStart();
