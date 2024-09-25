@@ -104,9 +104,9 @@ $(document).ready(function() {
     });
 
     // Trigger Credits Modal on Credits Button Click
-$('#creditsButton').on('click', function() {
-    $('#creditsModal').modal('show');
-});
+    $('#creditsButton').on('click', function () {
+        $('#creditsModal').modal('show');
+    });
 
     function isPrime(num) {
         if (num <= 1) return false;
